@@ -1,0 +1,13 @@
+@import './base.css';
+
+::-webkit-scrollbar {
+  width: 0;
+}
+::-webkit-scrollbar-track {
+  background: #D6E6F2;       /* цвет дорожки */
+}
+::-webkit-scrollbar-thumb {
+  background-color: #F7FBFC;    /* цвет плашки */
+  border-radius: 20px;       /* закругления плашки */
+  border: 1px solid #C0CFD3;  /* padding вокруг плашки */
+}
