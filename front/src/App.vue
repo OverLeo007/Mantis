@@ -1,7 +1,17 @@
 <script>
+import Board from "@/components/Board.vue";
+import axios from "axios";
+
+const boardsURL = 'http://26.171.167.108:8080/api/boards';
+const api = axios.create({
+  baseURL: boardsURL,
+})
+
 export default {
+  components: {Board},
   data() {
     return {
+      boards: Object,
       drawer: null,
       headerData: {},
     }
@@ -11,6 +21,29 @@ export default {
       headerData: this.headerData,
     }
   },
+  methods: {
+    async getBoards() {
+      try {
+        const response = await api.get("");
+        this.boards = response.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    goToBoardById(boardId, boardTitle) {
+      this.$router.push({
+        name: "board",
+        params: {id: boardId},
+        query: { boardTitle: boardTitle, boardId: boardId }});
+    },
+
+    goToBoards() {
+      this.$router.push({path: "/"})
+    }
+  },
+  async mounted() {
+    await this.getBoards();
+  }
 }
 </script>
 
@@ -19,6 +52,13 @@ export default {
     <v-navigation-drawer class="left-sidebar" v-model="drawer">
       <v-list-item :height="65" title="Логотип"></v-list-item>
       <v-divider></v-divider>
+      <v-list-item :height="65" title="Доски" @click="goToBoards"></v-list-item>
+      <v-list-item v-for="board in boards"
+                   :key="board.id"
+                   :title="board.title"
+                   :height="65"
+                   @click="goToBoardById(board.id, board.title)"
+                   ></v-list-item>
     </v-navigation-drawer>
 
     <v-app-bar color="#B9D7EA" class="header" :height="65">
@@ -27,7 +67,7 @@ export default {
     </v-app-bar>
 
     <v-main class="main">
-      <router-view></router-view>
+      <router-view :key="$route.fullPath"></router-view>
     </v-main>
   </v-app>
 </template>
