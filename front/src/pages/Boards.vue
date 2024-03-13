@@ -34,8 +34,8 @@ export default {
           title: "untitled",
           user_id: 1,
         });
-
         await this.getBoards();
+        this.$emit('boardUpdated', this.boards);
       } catch (error) {
         console.log(error);
       }
@@ -46,6 +46,7 @@ export default {
         this.boards = this.boards.filter(x => {
           return x.id !== id;
         })
+        this.$emit('boardUpdated', this.boards);
       } catch (error) {
         console.log(error);
       }

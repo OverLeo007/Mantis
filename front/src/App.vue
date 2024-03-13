@@ -16,6 +16,7 @@ export default {
       headerData: {},
     }
   },
+
   provide() {
     return {
       headerData: this.headerData,
@@ -30,6 +31,7 @@ export default {
         console.log(error);
       }
     },
+
     goToBoardById(boardId, boardTitle) {
       this.$router.push({
         name: "board",
@@ -39,11 +41,15 @@ export default {
 
     goToBoards() {
       this.$router.push({path: "/"})
+    },
+    updateBoardList(newBoards) {
+      this.boards = newBoards
     }
   },
+
   async mounted() {
     await this.getBoards();
-  }
+  },
 }
 </script>
 
@@ -67,7 +73,8 @@ export default {
     </v-app-bar>
 
     <v-main class="main">
-      <router-view :key="$route.fullPath"></router-view>
+      <router-view :key="$route.fullPath"
+                    @board-updated="updateBoardList"></router-view>
     </v-main>
   </v-app>
 </template>
