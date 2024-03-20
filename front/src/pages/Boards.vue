@@ -26,7 +26,10 @@ export default {
       }
     },
     goToBoardById(boardId, boardTitle) {
-      this.$router.push({path: "board/" + boardId, query: { boardTitle: boardTitle, boardId: boardId }});
+      this.$router.push({
+        name: "board",
+        params: {id: boardId},
+        query: { boardTitle: boardTitle, boardId: boardId }});
     },
     async createBoard() {
       try {

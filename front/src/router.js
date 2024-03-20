@@ -2,7 +2,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Boards from "@/pages/Boards.vue";
 import BoardPage from "@/pages/BoardPage.vue";
-import board from "@/components/Board.vue";
 
 
 const routes = [
