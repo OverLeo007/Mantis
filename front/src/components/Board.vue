@@ -23,7 +23,8 @@ export default {
       try {
         await api.put(`/${this.board.id}`, {
           title: this.board.title,
-        });
+        })
+        this.$emit('boardEdited');
       } catch (error) {
         console.log(error);
       }

@@ -13,6 +13,7 @@ export default {
     return {
       boards: Object,
       drawer: null,
+      icon: null,
       headerData: {},
     }
   },
@@ -22,6 +23,13 @@ export default {
       headerData: this.headerData,
     }
   },
+
+  computed: {
+    drawerIcon() {
+      return this.drawer ? 'mdi-chevron-left' : 'mdi-chevron-right';
+    }
+  },
+
   methods: {
     async getBoards() {
       try {
@@ -42,8 +50,13 @@ export default {
     goToBoards() {
       this.$router.push({path: "/"})
     },
+
     updateBoardList(newBoards) {
       this.boards = newBoards
+    },
+
+    toggleDrawer() {
+      this.drawer = !this.drawer;
     }
   },
 
@@ -67,8 +80,10 @@ export default {
                    ></v-list-item>
     </v-navigation-drawer>
 
-    <v-app-bar color="#B9D7EA" class="header" :height="65">
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-app-bar color="#B9D7EA" class="header">
+      <v-app-bar-nav-icon @click="toggleDrawer">
+        <v-icon>{{ drawerIcon  }}</v-icon>
+      </v-app-bar-nav-icon>
       <v-app-bar-title>{{ $route.path === "/" ? "Доски" : "Доска: " + headerData.boardTitle }}</v-app-bar-title>
     </v-app-bar>
 
@@ -99,5 +114,6 @@ export default {
 
 .header {
   border: 1px solid #C0CFD3;
+  height: 65px;
 }
 </style>

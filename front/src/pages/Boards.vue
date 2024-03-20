@@ -67,6 +67,7 @@ export default {
       <Board @click="goToBoardById(board.id, board.title)"
              v-for="board in boards"
              :data="board"
+             @board-edited="$emit('boardUpdated', this.boards)"
              @delete-board="deleteBoard"
              :key="board.id">
       </Board>
