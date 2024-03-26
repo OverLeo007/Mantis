@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 @RestController
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/lists")
+@RequiredArgsConstructor
 public class BoardListController extends
     CrudErrorHandlers<
         BoardListNotCreatedException,
@@ -53,18 +55,6 @@ public class BoardListController extends
   private final ModelMapper modelMapper;
 
   private final Logger log;
-
-
-  @Autowired
-  public BoardListController(BoardListService boardListService, BoardListDao boardListDao,
-      TaskDao taskDao, ModelMapper modelMapper, Logger log) {
-    this.boardListService = boardListService;
-    this.boardListDao = boardListDao;
-    this.taskDao = taskDao;
-    this.modelMapper = modelMapper;
-    this.log = log;
-  }
-
 
   @GetMapping("/{id}")
   public BoardListDto getList(@PathVariable int id) {

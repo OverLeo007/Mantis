@@ -20,7 +20,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@NoArgsConstructor
 @Data
 @Table(name = "users")
 public class User {
@@ -70,12 +69,5 @@ public class User {
 //      inverseJoinColumns = @JoinColumn(name = "role_id")
 //  )
 //  private List<Role> roles;
-
-  public User(String username, String email, String password, String preferences) {
-    this.username = username;
-    this.email = email;
-    this.password = password;
-    this.preferences = preferences;
-  }
 }
 

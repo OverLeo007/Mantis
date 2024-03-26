@@ -3,6 +3,7 @@ package ru.paskal.MantisManager.dao;
 import static ru.paskal.MantisManager.utils.TestLogger.log;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import ru.paskal.MantisManager.models.User;
 
 @Component
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class TaskDao extends Dao {
 
   public static final String tasksWithLabels =
@@ -23,11 +25,6 @@ public class TaskDao extends Dao {
 
 
   private final ModelMapper mm;
-
-  @Autowired
-  public TaskDao(ModelMapper mm) {
-    this.mm = mm;
-  }
 
   public List<TaskDtoToSend> getTasksByListId(Integer listId) {
     var session = getSession();

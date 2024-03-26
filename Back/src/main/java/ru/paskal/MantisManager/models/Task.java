@@ -26,7 +26,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 @Entity
-@NoArgsConstructor
 @Data
 @Table(name = "tasks")
 public class Task {

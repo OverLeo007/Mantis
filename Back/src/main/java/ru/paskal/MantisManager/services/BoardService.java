@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,20 +17,12 @@ import ru.paskal.MantisManager.repositories.UserRepository;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class BoardService {
-
 
   private final BoardRepository repository;
 
   private final UserRepository userRepository;
-
-
-  @Autowired
-  public BoardService(BoardRepository repository, UserRepository userRepository) {
-    this.repository = repository;
-    this.userRepository = userRepository;
-  }
-
 
   public Board getOne(int id) {
 

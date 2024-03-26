@@ -32,7 +32,6 @@ public class Board {
   @Column(name = "last_edit")
   private Timestamp lastEdit;
 
-
   @JsonIgnore
   @ManyToMany(mappedBy = "boards")
   private List<User> users;

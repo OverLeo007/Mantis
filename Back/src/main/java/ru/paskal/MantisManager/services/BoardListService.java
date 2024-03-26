@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Collections;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,20 +21,12 @@ import ru.paskal.MantisManager.repositories.BoardRepository;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class BoardListService {
   private final BoardListRepository repository;
 
   private final BoardRepository boardRepository;
   private final BoardDao boardDao;
-
-
-  @Autowired
-  public BoardListService(BoardListRepository repository, BoardRepository boardRepository,
-      BoardDao boardDao) {
-    this.repository = repository;
-    this.boardRepository = boardRepository;
-    this.boardDao = boardDao;
-  }
 
   public List<BoardList> getByBoardId(Integer boardId) {
     return repository.findByBoardId(boardId);

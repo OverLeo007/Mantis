@@ -4,6 +4,7 @@ package ru.paskal.MantisManager.controllers;
 import static ru.paskal.MantisManager.utils.staticUtils.okResponseWrapper;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 @RestController
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/tasks")
+@RequiredArgsConstructor
 public class TaskController extends
     CrudErrorHandlers<
         TaskNotCreatedException,
@@ -48,16 +50,6 @@ public class TaskController extends
   private final ModelMapper mm;
 
   private final Logger log;
-
-
-
-  @Autowired
-  public TaskController(TaskService taskService, TaskDao taskDao, ModelMapper mm, Logger log) {
-    this.taskService = taskService;
-    this.taskDao = taskDao;
-    this.mm = mm;
-    this.log = log;
-  }
 
   @GetMapping
   public ResponseEntity<List<TaskDtoToSend>> getByList(@RequestParam(name = "list_id") Integer listId) {
@@ -95,9 +87,9 @@ public class TaskController extends
       taskService.saveTask(taskToEditDto);
       log.info("Success edit task: " + taskToEditDto);
     } catch (Exception e) {
+      log.info("Failed to edit task: " + taskToEditDto);
       throw new TaskNotUpdatedException(e.getMessage());
     }
-    log.info("Failed to edit task: " + taskToEditDto);
     return ResponseEntity.ok().build();
   }
 

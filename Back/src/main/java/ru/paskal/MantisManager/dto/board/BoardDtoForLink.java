@@ -6,5 +6,4 @@ import lombok.Data;
 public class BoardDtoForLink {
   private Integer id;
   private String title;
-
 }

@@ -38,4 +38,9 @@ public class CrudErrorHandlers
     return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
   }
 
+//  @ExceptionHandler
+//  private ResponseEntity<ErrorResponse> handleDeleteException(Exception e) {
+//    return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+//  }
+
 }

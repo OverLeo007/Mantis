@@ -4,6 +4,7 @@ package ru.paskal.MantisManager.services;
 import static ru.paskal.MantisManager.utils.TestLogger.log;
 
 import jakarta.persistence.criteria.CriteriaBuilder.In;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import ru.paskal.MantisManager.repositories.TaskRepository;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class TaskService {
   private final TaskRepository repository;
 
@@ -28,17 +30,6 @@ public class TaskService {
   private final TaskDao taskDao;
 
   private final ModelMapper mm;
-
-
-  @Autowired
-  public TaskService(TaskRepository repository, BoardListRepository boardListRepository,
-      TaskDao taskDao, ModelMapper mm) {
-    this.repository = repository;
-    this.boardListRepository = boardListRepository;
-    this.taskDao = taskDao;
-    this.mm = mm;
-  }
-
 
   public TaskDtoToSend getTaskById(Integer id) {
     return taskDao.mapTask(repository.findById(id).orElseThrow(() -> new TaskNotFoundException(id)));
