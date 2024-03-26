@@ -1,5 +1,6 @@
 package ru.paskal.MantisManager.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,20 +15,13 @@ import ru.paskal.MantisManager.services.UserService;
 
 @RestController
 @RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController {
 
   private final UserService userService;
   private final BoardService boardService;
-
   private final ModelMapper modelMapper;
 
-
-  @Autowired
-  public UserController(UserService userService, BoardService boardService, ModelMapper modelMapper) {
-    this.userService = userService;
-    this.boardService = boardService;
-    this.modelMapper = modelMapper;
-  }
 
   @GetMapping("/{id}")
   public ResponseEntity<UserDtoForLoad> getUser(@PathVariable int id) {

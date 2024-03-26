@@ -1,8 +1,12 @@
 package ru.paskal.MantisManager.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,39 +35,32 @@ import ru.paskal.MantisManager.models.Board;
 import ru.paskal.MantisManager.services.BoardService;
 import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 
+//import static ru.paskal.MantisManager.utils.TestLogger.log;
+
 @RestController
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/boards")
+@RequiredArgsConstructor
 public class BoardController extends
     CrudErrorHandlers<
-                    BoardNotCreatedException,
-                    BoardNotFoundException,
-                    BoardNotUpdatedException,
-                    BoardNotDeletedException
-                    > {
+        BoardNotCreatedException,
+        BoardNotFoundException,
+        BoardNotUpdatedException,
+        BoardNotDeletedException
+        > {
 
   private final BoardService boardService;
   private final BoardDao boardDao;
   private final ModelMapper modelMapper;
+  private final Logger log;
 
-  @Autowired
-  public BoardController(BoardService boardService, BoardDao boardDao, ModelMapper modelMapper) {
-    this.boardService = boardService;
-    this.boardDao = boardDao;
-    this.modelMapper = modelMapper;
-  }
-
-  @GetMapping("/{id}")
-  public BoardDto getBoard(@PathVariable Integer id) {
-//    BoardDto board = modelMapper.map(boardDao.getBoard(id), BoardDto.class);
-    return convertBoardToDto(boardDao.getBoard(id));
-  }
 
   @GetMapping
   public List<BoardDtoForLink> getBoards(
       @RequestParam(name = "user", required = false) Integer uid) {
     if (uid != null) {
       try {
+        log.info("Got boards by userid: " + uid);
         return boardService.getByUser(uid).stream()
             .map(board -> modelMapper.map(board, BoardDtoForLink.class)).toList();
       } catch (UserNotFoundException e) {
@@ -78,31 +75,41 @@ public class BoardController extends
   @ResponseStatus(HttpStatus.OK)
   public void create(@RequestBody JsonNode json) {
     try {
+      log.info("Trying to create board: " + json.toString());
       // TODO: Сделать возвращение результата
       boardService.save(json.get("title").asText(), json.get("user_id").asInt());
     } catch (UserNotFoundException e) {
+      log.info("Failed creating board: " + json + ", with " + e.getMessage());
       throw new BoardNotCreatedException(e.getMessage());
     }
+    log.info("Success created board: " + json);
   }
 
   @PutMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void edit(@PathVariable Integer id, @RequestBody JsonNode json) {
     try {
+      log.info("Trying to edit board id=" + id + ": " + json.toString());
       boardService.update(id, json.get("title"));
     } catch (BoardNotFoundException e) {
+      log.info("Failed editing board id=" + id + ": " + json);
       throw new BoardNotUpdatedException(e.getMessage());
     }
+    log.info("Success editing board id=" + id + ": " + json);
+
   }
 
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void delete(@PathVariable Integer id) {
     try {
+      log.info("Trying to delete board id=" + id);
       boardService.delete(id);
     } catch (BoardNotFoundException e) {
+      log.info("Failed deleting board: " + id);
       throw new BoardNotDeletedException(e.getMessage());
     }
+    log.info("Success deleting board id=" + id);
   }
 
 

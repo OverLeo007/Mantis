@@ -1,12 +1,12 @@
 package ru.paskal.MantisManager.controllers;
 
 
-import static ru.paskal.MantisManager.utils.TestLogger.log;
 import static ru.paskal.MantisManager.utils.staticUtils.okResponseWrapper;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +28,13 @@ import ru.paskal.MantisManager.exceptions.notCreated.TaskNotCreatedException;
 import ru.paskal.MantisManager.exceptions.notDeleted.TaskNotDeletedException;
 import ru.paskal.MantisManager.exceptions.notFound.TaskNotFoundException;
 import ru.paskal.MantisManager.exceptions.notUpdated.TaskNotUpdatedException;
-import ru.paskal.MantisManager.models.Task;
 import ru.paskal.MantisManager.services.TaskService;
 import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 
 @RestController
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/tasks")
+@RequiredArgsConstructor
 public class TaskController extends
     CrudErrorHandlers<
         TaskNotCreatedException,
@@ -49,35 +49,33 @@ public class TaskController extends
 
   private final ModelMapper mm;
 
-
-  @Autowired
-  public TaskController(TaskService taskService, TaskDao taskDao, ModelMapper mm) {
-    this.taskService = taskService;
-    this.taskDao = taskDao;
-    this.mm = mm;
-  }
+  private final Logger log;
 
   @GetMapping
   public ResponseEntity<List<TaskDtoToSend>> getByList(@RequestParam(name = "list_id") Integer listId) {
+    log.info("Trying to tasks by list id=" + listId);
     var task = taskDao.getTasksByListId(listId);
-    log(task);
+    log.info("Got task by list id=" + listId + ": " + task);
     return okResponseWrapper(task);
   }
 
   @GetMapping("{id}")
   public ResponseEntity<TaskDtoToSend> getById(@PathVariable(name = "id") Integer taskId) {
+    log.info("Trying to tasks by id=" + taskId);
     var task = taskService.getTaskById(taskId);
-    log(task);
+    log.info("Got task by id=" + taskId + ": " + task);
     return okResponseWrapper(task);
   }
 
   @PostMapping
   public ResponseEntity<TaskDtoToSend> createTask(@RequestBody TaskCreateDto taskCreateDto) {
     try {
+      log.info("Trying to create task: " + taskCreateDto);
       var task = taskService.saveTask(taskCreateDto);
-      log(task);
+      log.info("Success created task: " + task);
       return okResponseWrapper(task);
     } catch (Exception e) {
+      log.info("Failed to create task: " + taskCreateDto);
       throw new TaskNotCreatedException(e.getMessage());
     }
   }
@@ -85,9 +83,11 @@ public class TaskController extends
   @PutMapping
   public ResponseEntity<HttpStatus> editTask(@RequestBody TaskToEditDto taskToEditDto) {
     try {
-      log(taskToEditDto);
+      log.info("Trying to edit task: " + taskToEditDto);
       taskService.saveTask(taskToEditDto);
+      log.info("Success edit task: " + taskToEditDto);
     } catch (Exception e) {
+      log.info("Failed to edit task: " + taskToEditDto);
       throw new TaskNotUpdatedException(e.getMessage());
     }
     return ResponseEntity.ok().build();
@@ -96,12 +96,13 @@ public class TaskController extends
   @DeleteMapping("/{id}")
   public ResponseEntity<HttpStatus> deleteTask(@PathVariable Integer id) {
     try {
+      log.info("Trying to delete task id=" + id);
       taskService.delete(id);
+      log.info("Success deleting task id=" + id);
     } catch (TaskNotFoundException e) {
+      log.info("Failed deleting task id=" + id);
       throw new TaskNotDeletedException(e.getMessage());
     }
     return ResponseEntity.ok().build();
   }
-
-
 }

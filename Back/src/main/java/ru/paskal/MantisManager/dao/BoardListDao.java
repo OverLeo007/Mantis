@@ -3,6 +3,7 @@ package ru.paskal.MantisManager.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import ru.paskal.MantisManager.utils.TestLogger;
 
 @Component
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class BoardListDao extends Dao {
   public static final String listTasksById =
       "SELECT t from Task t WHERE t.list = :list";
@@ -25,11 +27,6 @@ public class BoardListDao extends Dao {
       "SELECT l from BoardList l LEFT JOIN FETCH l.tasks t WHERE l.board.id = :boardId";
 
   private final BoardRepository boardRepository;
-
-  @Autowired
-  public BoardListDao(BoardRepository boardRepository) {
-    this.boardRepository = boardRepository;
-  }
 
   public BoardList getList(int id) {
     Session session = getSession();

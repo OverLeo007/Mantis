@@ -1,11 +1,14 @@
 package ru.paskal.MantisManager.controllers;
 
-import static ru.paskal.MantisManager.utils.TestLogger.log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.paskal.MantisManager.dao.BoardListDao;
 import ru.paskal.MantisManager.dao.TaskDao;
 import ru.paskal.MantisManager.dto.BoardListDto;
-import ru.paskal.MantisManager.dto.task.TaskDtoToSend;
 import ru.paskal.MantisManager.exceptions.JsonParsingException;
 import ru.paskal.MantisManager.exceptions.notCreated.BoardListNotCreatedException;
 import ru.paskal.MantisManager.exceptions.notDeleted.BoardListNotDeletedException;
@@ -37,6 +39,7 @@ import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 @RestController
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/lists")
+@RequiredArgsConstructor
 public class BoardListController extends
     CrudErrorHandlers<
         BoardListNotCreatedException,
@@ -51,24 +54,18 @@ public class BoardListController extends
   private final TaskDao taskDao;
   private final ModelMapper modelMapper;
 
-  @Autowired
-  public BoardListController(BoardListService boardListService, BoardListDao boardListDao,
-      TaskDao taskDao, ModelMapper modelMapper) {
-    this.boardListService = boardListService;
-    this.boardListDao = boardListDao;
-    this.taskDao = taskDao;
-    this.modelMapper = modelMapper;
-  }
-
+  private final Logger log;
 
   @GetMapping("/{id}")
   public BoardListDto getList(@PathVariable int id) {
+    log.info("Got lists by list id: " + id);
     return convertListToDto(boardListService.getById(id));
   }
 
   @GetMapping
   public List<BoardListDto> getLists(
       @RequestParam(name = "board", required = false) Integer boardId) {
+    log.info("Got lists by board id: " + boardId);
     if (boardId != null) {
       try {
         return boardListDao.getLists(boardId).stream().map(this::convertListToDto).toList();
@@ -84,33 +81,43 @@ public class BoardListController extends
   @ResponseStatus(HttpStatus.OK)
   public void editList(@PathVariable Integer id, @RequestBody BoardList boardList) {
     try {
+      log.info("Trying to edit list id=" + id + ": ");
       boardListService.update(id, boardList);
     } catch (BoardListNotFoundException e) {
+      log.info("Failed editing list id=" + id + ": " + boardList.toString());
       throw new BoardListNotUpdatedException(e.getMessage());
     }
+    log.info("Success editing list id=" + id + ": " + boardList.toString());
   }
 
   @PostMapping
   @ResponseStatus(HttpStatus.OK)
   public void createList(@RequestBody JsonNode json) {
     try {
+      log.info("Trying to create list: " + json.toString());
+
       // TODO: Сделать возвращение результата
       boardListService.create(json);
     } catch (JsonProcessingException | JsonParsingException | BoardNotFoundException e) {
+      log.info("Failed creating list: " + json + ", with " + e.getMessage());
       throw new BoardListNotCreatedException(e.getMessage());
     }
+    log.info("Success created list: " + json);
   }
 
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.OK)
   public void deleteList(@PathVariable Integer id) {
     try {
+      log.info("Trying to delete list id=" + id);
+
       boardListService.delete(id);
     } catch (BoardListNotFoundException e) {
+      log.info("Failed deleting list: " + id);
       throw new BoardListNotDeletedException(e.getMessage());
     }
+    log.info("Success deleting list id=" + id);
   }
-
 
 
   private BoardListDto convertListToDto(BoardList list) {

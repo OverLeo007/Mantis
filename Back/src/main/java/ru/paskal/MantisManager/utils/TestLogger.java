@@ -1,6 +1,5 @@
 package ru.paskal.MantisManager.utils;
 
-import java.util.Arrays;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,9 +10,7 @@ public class TestLogger {
 
   public static final String MAGENTA = "\033[35m";
 
-//  public static void log(Object o) {
-//    System.out.println(GREEN + "[LOG] " + RESET + MAGENTA + o + RESET);
-//  }
+
   //TODO: Rolling File сделать
   public static void log(Object o, String who) {
 

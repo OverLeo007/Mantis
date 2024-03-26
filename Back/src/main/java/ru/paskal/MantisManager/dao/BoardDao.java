@@ -11,7 +11,7 @@ import ru.paskal.MantisManager.models.User;
 import ru.paskal.MantisManager.utils.TestLogger;
 
 @Component
-public class BoardDao extends Dao{
+public class BoardDao extends Dao {
 
   public static final String listsFromBoard =
       "SELECT l FROM BoardList l LEFT JOIN FETCH l.tasks t  WHERE l.board = :board";
