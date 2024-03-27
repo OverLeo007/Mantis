@@ -1,8 +1,9 @@
 <script>
 import EditableCardTitle from "@/components/EditableCardTitle.vue";
 import axios from "axios";
-import { DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
 import {watch} from "vue";
+import TimeConverter from "../utils/TimeConverter.js";
 
 const baseURL = 'http://26.171.167.108:8080/api/tasks'
 const api = axios.create({
@@ -13,6 +14,11 @@ const api = axios.create({
 
 export default {
   name: "Card",
+  computed: {
+    TimeConverter() {
+      return TimeConverter
+    }
+  },
   components: {EditableCardTitle},
   props: {
     data: Object,
@@ -43,6 +49,17 @@ export default {
       try {
         this.isStartDate ? this.card.taskPreferences['startDate'] = this.startDate : this.card.taskPreferences['startDate'] = null
         this.isEndDate ? this.card.taskPreferences['endDate'] = this.endDate : this.card.taskPreferences['endDate'] = null
+
+        if (this.card.taskPreferences['startDate'] && this.card.taskPreferences['endDate']) {
+          const startDate = DateTime.fromISO(this.card.taskPreferences['startDate']);
+          const endDate = DateTime.fromISO(this.card.taskPreferences['endDate']);
+          if (startDate.year > endDate.year) {
+            const newEndDate = endDate.plus({years: 1}).toISO().substring(0, 16);
+
+            this.card.taskPreferences['endDate'] = newEndDate;
+            this.endDate = newEndDate;
+          }
+        }
 
         const response = await api.put("", {
           id: this.card.id,
@@ -78,6 +95,24 @@ export default {
       <v-icon @click.stop="$emit('deleteCard', card.id)" class="card-sheet-icon" icon="mdi-trash-can"></v-icon>
     </v-sheet>
     <EditableCardTitle :data="card" :field-to-edit="'taskTitle'" :function-stop-editing="editCard" :hide-delete-button="true"></EditableCardTitle>
+    <div class="card-time">
+      <span v-if="this.card.taskPreferences['startDate'] && this.card.taskPreferences['endDate']">
+        {{ TimeConverter.twoDeadlines(this.card.taskPreferences['startDate'], this.card.taskPreferences['endDate']) }}
+      </span>
+      <span v-else-if="card.taskPreferences['startDate']">
+        Дата начала: {{ TimeConverter.deadline(card.taskPreferences['startDate']) }}
+      </span>
+      <span v-else-if="card.taskPreferences['endDate']">
+        Дата окончания: {{ TimeConverter.deadline(card.taskPreferences['endDate']) }}
+      </span>
+      <v-icon
+          v-if="this.card.taskPreferences['startDate'] || this.card.taskPreferences['endDate']"
+          class="card-time-icon"
+          icon="mdi-clock-time-ten-outline"
+          size="small"
+      >
+      </v-icon>
+    </div>
   </v-card>
 
   <!--Modal-->
@@ -239,6 +274,20 @@ export default {
 .date-checkbox {
   transform: scale(1.2);
   margin-left: 6px;
+}
+
+.card-time {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 20px;
+  color: #445365;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+.card-time-icon {
+  margin-left: 10px;
 }
 
 </style>
