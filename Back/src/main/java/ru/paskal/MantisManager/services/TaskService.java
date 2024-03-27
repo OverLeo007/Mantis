@@ -1,28 +1,26 @@
 package ru.paskal.MantisManager.services;
 
 
-import static ru.paskal.MantisManager.utils.TestLogger.log;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.paskal.MantisManager.dao.TaskDao;
-import ru.paskal.MantisManager.dto.task.TaskCreateDto;
-import ru.paskal.MantisManager.dto.task.TaskDtoToSend;
-import ru.paskal.MantisManager.dto.task.TaskToEditDto;
+import ru.paskal.MantisManager.models.dto.task.TaskCreateDto;
+import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
+import ru.paskal.MantisManager.models.dto.task.TaskToEditDto;
 import ru.paskal.MantisManager.exceptions.notFound.BoardListNotFoundException;
-import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.TaskNotFoundException;
-import ru.paskal.MantisManager.models.Task;
+import ru.paskal.MantisManager.entities.Task;
 import ru.paskal.MantisManager.repositories.BoardListRepository;
 import ru.paskal.MantisManager.repositories.TaskRepository;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class TaskService {
   private final TaskRepository repository;
 
@@ -38,7 +36,7 @@ public class TaskService {
   @Transactional
   public TaskDtoToSend saveTask(TaskCreateDto task) {
     var newTask = repository.save(mapFromCreateDto(task));
-    log("savedTask  Task: " + repository.save(newTask));
+    log.info("savedTask  Task: " + repository.save(newTask));
     return taskDao.mapTask(newTask);
 
 //    repository.save(task);
@@ -46,14 +44,15 @@ public class TaskService {
 
   @Transactional
   public void saveTask(TaskToEditDto task) {
-    var localTask = repository.findById(task.getId()).orElseThrow(() -> new TaskNotFoundException(task.getId()));
+    var localTask = repository.findById(task.getId())
+        .orElseThrow(() -> new TaskNotFoundException(task.getId()));
     localTask.setTaskPreferences(task.getTaskPreferences().toString());
     localTask.setTaskPosition(task.getTaskPosition());
     localTask.setDueDate(task.getDueDate());
     localTask.setTaskText(task.getTaskText());
     localTask.setTaskTitle(task.getTaskTitle());
-    log(localTask);
-    log("Updated  Task: " + repository.save(localTask));
+    log.info(localTask.toString());
+    log.info("Updated  Task: " + repository.save(localTask));
   }
 
   private Task mapFromCreateDto(TaskCreateDto taskCreateDto) {

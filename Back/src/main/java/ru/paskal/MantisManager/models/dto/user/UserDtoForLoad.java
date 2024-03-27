@@ -1,8 +1,8 @@
-package ru.paskal.MantisManager.dto.user;
+package ru.paskal.MantisManager.models.dto.user;
 
 import java.util.List;
 import lombok.Data;
-import ru.paskal.MantisManager.dto.board.BoardDtoForLink;
+import ru.paskal.MantisManager.models.dto.board.BoardDtoForLink;
 
 @Data
 public class UserDtoForLoad {

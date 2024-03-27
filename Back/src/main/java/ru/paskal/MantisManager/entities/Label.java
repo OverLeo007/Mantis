@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.models;
+package ru.paskal.MantisManager.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,13 +8,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.util.List;
-import java.util.Objects;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Data
@@ -36,6 +35,11 @@ public class Label {
   @EqualsAndHashCode.Exclude
   @ManyToMany(mappedBy = "labels")
   private List<Task> tasks;
+
+  @Column(name = "label_preferences")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private String taskPreferences;
+
 
   public Label(String title, String info, Task task) {
     this.title = title;

@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,17 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.paskal.MantisManager.dao.BoardDao;
-import ru.paskal.MantisManager.dto.board.BoardDto;
-import ru.paskal.MantisManager.dto.board.BoardDtoForLink;
-import ru.paskal.MantisManager.dto.BoardListDto;
-import ru.paskal.MantisManager.dto.task.TaskDtoToSend;
-import ru.paskal.MantisManager.dto.user.UserDtoForLink;
+import ru.paskal.MantisManager.models.dto.board.BoardDto;
+import ru.paskal.MantisManager.models.dto.board.BoardDtoForLink;
+import ru.paskal.MantisManager.models.dto.BoardListDto;
+import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
+import ru.paskal.MantisManager.models.dto.user.UserDtoForLink;
 import ru.paskal.MantisManager.exceptions.notCreated.BoardNotCreatedException;
 import ru.paskal.MantisManager.exceptions.notDeleted.BoardNotDeletedException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.UserNotFoundException;
 import ru.paskal.MantisManager.exceptions.notUpdated.BoardNotUpdatedException;
-import ru.paskal.MantisManager.models.Board;
+import ru.paskal.MantisManager.entities.Board;
 import ru.paskal.MantisManager.services.BoardService;
 import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 
@@ -41,6 +40,7 @@ import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/boards")
 @RequiredArgsConstructor
+@Slf4j
 public class BoardController extends
     CrudErrorHandlers<
         BoardNotCreatedException,
@@ -52,7 +52,6 @@ public class BoardController extends
   private final BoardService boardService;
   private final BoardDao boardDao;
   private final ModelMapper modelMapper;
-  private final Logger log;
 
 
   @GetMapping

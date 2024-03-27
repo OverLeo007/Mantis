@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.dto.user;
+package ru.paskal.MantisManager.models.dto.user;
 
 
 import lombok.Data;

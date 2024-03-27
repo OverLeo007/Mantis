@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.models;
+package ru.paskal.MantisManager.entities;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,9 +14,6 @@ import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -40,6 +37,9 @@ public class User {
 
   @Column(name = "preferences")
   private String preferences;
+
+  @Column(name = "simple_role")
+  private String simpleRole;
 
   @EqualsAndHashCode.Exclude
   @ToString.Exclude

@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.dto.board;
+package ru.paskal.MantisManager.models.dto.board;
 
 import lombok.Data;
 

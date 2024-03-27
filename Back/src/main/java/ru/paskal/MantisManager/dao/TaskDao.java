@@ -1,19 +1,16 @@
 package ru.paskal.MantisManager.dao;
 
-import static ru.paskal.MantisManager.utils.TestLogger.log;
-
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.paskal.MantisManager.dto.CommentDto;
-import ru.paskal.MantisManager.dto.LabelDtoForTask;
-import ru.paskal.MantisManager.dto.task.TaskDtoToSend;
-import ru.paskal.MantisManager.dto.user.UserDtoForLink;
-import ru.paskal.MantisManager.models.Task;
-import ru.paskal.MantisManager.models.User;
+import ru.paskal.MantisManager.models.dto.CommentDto;
+import ru.paskal.MantisManager.models.dto.LabelDtoForTask;
+import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
+import ru.paskal.MantisManager.models.dto.user.UserDtoForLink;
+import ru.paskal.MantisManager.entities.Task;
+import ru.paskal.MantisManager.entities.User;
 
 @Component
 @Transactional(readOnly = true)

@@ -5,15 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.paskal.MantisManager.dao.BoardDao;
 import ru.paskal.MantisManager.exceptions.JsonParsingException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardListNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
-import ru.paskal.MantisManager.models.Board;
-import ru.paskal.MantisManager.models.BoardList;
+import ru.paskal.MantisManager.entities.Board;
+import ru.paskal.MantisManager.entities.BoardList;
 import ru.paskal.MantisManager.repositories.BoardListRepository;
 import ru.paskal.MantisManager.repositories.BoardRepository;
 

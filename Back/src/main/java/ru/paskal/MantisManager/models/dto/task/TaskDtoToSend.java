@@ -1,12 +1,11 @@
-package ru.paskal.MantisManager.dto.task;
+package ru.paskal.MantisManager.models.dto.task;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
-import ru.paskal.MantisManager.dto.CommentDto;
-import ru.paskal.MantisManager.dto.LabelDtoForTask;
-import ru.paskal.MantisManager.dto.user.UserDtoForLink;
+import ru.paskal.MantisManager.models.dto.CommentDto;
+import ru.paskal.MantisManager.models.dto.LabelDtoForTask;
+import ru.paskal.MantisManager.models.dto.user.UserDtoForLink;
 
 
 @Data

@@ -1,17 +1,13 @@
 package ru.paskal.MantisManager.dao;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.paskal.MantisManager.exceptions.notFound.BoardListNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
-import ru.paskal.MantisManager.models.BoardList;
-import ru.paskal.MantisManager.models.Task;
+import ru.paskal.MantisManager.entities.BoardList;
 import ru.paskal.MantisManager.repositories.BoardRepository;
 import ru.paskal.MantisManager.utils.TestLogger;
 

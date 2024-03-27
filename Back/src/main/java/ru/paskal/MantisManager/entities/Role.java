@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.models;
+package ru.paskal.MantisManager.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -5,9 +5,8 @@ import static ru.paskal.MantisManager.utils.staticUtils.okResponseWrapper;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.paskal.MantisManager.dao.TaskDao;
-import ru.paskal.MantisManager.dto.task.TaskCreateDto;
-import ru.paskal.MantisManager.dto.task.TaskDtoToSend;
-import ru.paskal.MantisManager.dto.task.TaskToEditDto;
+import ru.paskal.MantisManager.models.dto.task.TaskCreateDto;
+import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
+import ru.paskal.MantisManager.models.dto.task.TaskToEditDto;
 import ru.paskal.MantisManager.exceptions.notCreated.TaskNotCreatedException;
 import ru.paskal.MantisManager.exceptions.notDeleted.TaskNotDeletedException;
 import ru.paskal.MantisManager.exceptions.notFound.TaskNotFoundException;
@@ -35,6 +34,7 @@ import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
+@Slf4j
 public class TaskController extends
     CrudErrorHandlers<
         TaskNotCreatedException,
@@ -49,7 +49,6 @@ public class TaskController extends
 
   private final ModelMapper mm;
 
-  private final Logger log;
 
   @GetMapping
   public ResponseEntity<List<TaskDtoToSend>> getByList(@RequestParam(name = "list_id") Integer listId) {

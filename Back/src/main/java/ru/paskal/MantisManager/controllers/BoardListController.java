@@ -7,9 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,14 +23,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.paskal.MantisManager.dao.BoardListDao;
 import ru.paskal.MantisManager.dao.TaskDao;
-import ru.paskal.MantisManager.dto.BoardListDto;
+import ru.paskal.MantisManager.models.dto.BoardListDto;
 import ru.paskal.MantisManager.exceptions.JsonParsingException;
 import ru.paskal.MantisManager.exceptions.notCreated.BoardListNotCreatedException;
 import ru.paskal.MantisManager.exceptions.notDeleted.BoardListNotDeletedException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardListNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
 import ru.paskal.MantisManager.exceptions.notUpdated.BoardListNotUpdatedException;
-import ru.paskal.MantisManager.models.BoardList;
+import ru.paskal.MantisManager.entities.BoardList;
 import ru.paskal.MantisManager.services.BoardListService;
 import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 
@@ -40,6 +39,7 @@ import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/lists")
 @RequiredArgsConstructor
+@Slf4j
 public class BoardListController extends
     CrudErrorHandlers<
         BoardListNotCreatedException,
@@ -54,7 +54,6 @@ public class BoardListController extends
   private final TaskDao taskDao;
   private final ModelMapper modelMapper;
 
-  private final Logger log;
 
   @GetMapping("/{id}")
   public BoardListDto getList(@PathVariable int id) {

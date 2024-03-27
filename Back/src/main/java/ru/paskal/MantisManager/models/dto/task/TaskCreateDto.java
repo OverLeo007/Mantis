@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.dto.task;
+package ru.paskal.MantisManager.models.dto.task;
 
 import lombok.Data;
 

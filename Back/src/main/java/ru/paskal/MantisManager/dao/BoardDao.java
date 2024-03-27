@@ -5,9 +5,9 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
-import ru.paskal.MantisManager.models.Board;
-import ru.paskal.MantisManager.models.BoardList;
-import ru.paskal.MantisManager.models.User;
+import ru.paskal.MantisManager.entities.Board;
+import ru.paskal.MantisManager.entities.BoardList;
+import ru.paskal.MantisManager.entities.User;
 import ru.paskal.MantisManager.utils.TestLogger;
 
 @Component

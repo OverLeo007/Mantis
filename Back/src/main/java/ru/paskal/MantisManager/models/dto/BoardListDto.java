@@ -1,8 +1,8 @@
-package ru.paskal.MantisManager.dto;
+package ru.paskal.MantisManager.models.dto;
 
 import java.util.List;
 import lombok.Data;
-import ru.paskal.MantisManager.dto.task.TaskDtoToSend;
+import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
 
 @Data
 public class BoardListDto {

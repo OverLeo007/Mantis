@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.models;
+package ru.paskal.MantisManager.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
@@ -6,51 +6,48 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.sql.Timestamp;
 import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "lists")
-public class BoardList {
+@Table(name = "boards")
+public class Board {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "list_id")
+  @Column(name = "board_id")
   private Integer id;
 
   @Column(name = "title", nullable = false)
   private String title;
 
-  @Column(name = "list_position")
-  private Integer listPosition;
+  @Column(name = "last_edit")
+  private Timestamp lastEdit;
 
   @JsonIgnore
-  @ToString.Exclude
-  @EqualsAndHashCode.Exclude
-  @ManyToOne
-  @JoinColumn(name = "board_id")
-  private Board board;
+  @ManyToMany(mappedBy = "boards")
+  private List<User> users;
+
+//  @JsonIgnore
+//  @OneToMany(mappedBy = "board")
+//  private List<Role> roles;
 
   @ToString.Exclude
   @EqualsAndHashCode.Exclude
-  @OneToMany(mappedBy = "list")
-  private List<Task> tasks;
+  @OneToMany(mappedBy = "board")
+  private List<BoardList> lists;
 
-
-  public BoardList(String title, Integer listPosition, Board board) {
+  public Board(String title, Timestamp lastEdit) {
     this.title = title;
-    this.listPosition = listPosition;
-    this.board = board;
+    this.lastEdit = lastEdit;
   }
 
 }
