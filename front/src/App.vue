@@ -9,11 +9,13 @@ const api = axios.create({
 
 export default {
   components: {Board},
+
   data() {
     return {
       boards: Object,
       drawer: null,
       icon: null,
+      authIcon: 'mdi-account-outline',
       headerData: {},
     }
   },
@@ -57,6 +59,10 @@ export default {
 
     toggleDrawer() {
       this.drawer = !this.drawer;
+    },
+
+    authorise() {
+      this.$router.push({path: "/login"})
     }
   },
 
@@ -82,9 +88,12 @@ export default {
 
     <v-app-bar color="#B9D7EA" class="header">
       <v-app-bar-nav-icon @click="toggleDrawer">
-        <v-icon>{{ drawerIcon  }}</v-icon>
+        <v-icon>{{ drawerIcon }}</v-icon>
       </v-app-bar-nav-icon>
       <v-app-bar-title>{{ $route.path === "/" ? "Доски" : "Доска: " + headerData.boardTitle }}</v-app-bar-title>
+      <v-app-bar-nav-icon style="margin-right:10px;" @click="authorise">
+        <v-icon>{{ authIcon }}</v-icon>
+      </v-app-bar-nav-icon>
     </v-app-bar>
 
     <v-main class="main">
