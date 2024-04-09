@@ -63,6 +63,14 @@ export default {
 
     authorise() {
       this.$router.push({path: "/login"})
+    },
+
+    showBar() {
+      let curPath = this.$route.path;
+      if (curPath === '/login' || curPath === '/signin') {
+        this.drawer = false
+      }
+      return curPath !== '/login' && curPath !== '/signin'
     }
   },
 
@@ -74,7 +82,7 @@ export default {
 
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer class="left-sidebar" v-model="drawer">
+    <v-navigation-drawer class="left-sidebar"  v-model="drawer">
       <v-list-item :height="65" title="Логотип"></v-list-item>
       <v-divider></v-divider>
       <v-list-item :height="65" title="Доски" @click="goToBoards"></v-list-item>
@@ -86,7 +94,7 @@ export default {
                    ></v-list-item>
     </v-navigation-drawer>
 
-    <v-app-bar color="#B9D7EA" class="header">
+    <v-app-bar v-show="showBar()" color="#B9D7EA" class="header">
       <v-app-bar-nav-icon @click="toggleDrawer">
         <v-icon>{{ drawerIcon }}</v-icon>
       </v-app-bar-nav-icon>

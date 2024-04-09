@@ -4,12 +4,13 @@ export default {
     return {
       login: '',
       email: '',
-      password: ''
+      password: '',
+      password_repeat: ''
     };
   },
   methods: {
     submitForm() {
-      console.log('Отправляем данные: (шутка, мы ниче не отправляем пока)', this.login, this.email, this.password);
+      console.log('Отправляем данные регистрации: (шутка, мы ниче не отправляем пока)', this.login, this.email, this.password);
       this.$router.push({path: "/login"})
     },
     logIn() {
@@ -20,7 +21,7 @@ export default {
 </script>
 
 <template>
-  <div class="registration-form">
+  <div class="login-form">
     <h2>РЕГИСТРАЦИЯ</h2>
     <form @submit.prevent="submitForm">
       <div class="form-group">
@@ -37,7 +38,7 @@ export default {
       </div>
       <div class="form-group">
         <label for="password">Повтор пароля:</label>
-        <input type="password" id="password" v-model="password" required>
+        <input type="password" id="password" v-model="password_repeat" required>
       </div>
       <v-btn
           class="submit-button"
@@ -55,7 +56,7 @@ export default {
 </template>
 
 <style scoped>
-.registration-form {
+.login-form {
   position: absolute;
   top: 50%;
   left: 50%;
