@@ -2,7 +2,6 @@
 import EditableCardTitle from "@/components/EditableCardTitle.vue";
 import axios from "axios";
 import { DateTime, Duration } from "luxon";
-import {watch} from "vue";
 import TimeConverter from "../utils/TimeConverter.js";
 
 const baseURL = 'http://26.171.167.108:8080/api/tasks'
@@ -29,8 +28,8 @@ export default {
       card: this.data,
       startDate: String,
       endDate: String,
-      isStartDate: Boolean,
-      isEndDate: Boolean,
+      isStartDate: false,
+      isEndDate: false,
       dialog: false,
       swatches: [
         ['#FF0000', '#AA0000', '#550000'],
