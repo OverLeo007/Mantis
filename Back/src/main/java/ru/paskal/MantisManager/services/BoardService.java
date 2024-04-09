@@ -2,14 +2,16 @@ package ru.paskal.MantisManager.services;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.paskal.MantisManager.entities.Board;
+import ru.paskal.MantisManager.entities.User;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.UserNotFoundException;
-import ru.paskal.MantisManager.entities.Board;
 import ru.paskal.MantisManager.repositories.BoardRepository;
 import ru.paskal.MantisManager.repositories.UserRepository;
 
@@ -53,6 +55,29 @@ public class BoardService {
     repository.save(board);
   }
 
+
+  @Transactional
+  public void save(String title, User user) {
+    var userCurSession = userRepository.findById(user.getId()).get();
+
+    Board board = new Board();
+    board.setTitle(title);
+    board.setLastEdit(new Timestamp(System.currentTimeMillis()));
+    board.setUsers(new ArrayList<>(Collections.singletonList(userCurSession)));
+    var savedBoard = repository.save(board);
+
+    var userBoards = userCurSession.getBoards();
+
+    if (userBoards != null) {
+      userBoards.add(savedBoard);
+    } else {
+      userCurSession.setBoards(new ArrayList<>(Collections.singletonList(savedBoard)));
+    }
+
+    userRepository.save(userCurSession);
+  }
+
+
   @Transactional
   public void update(int id, JsonNode title) {
     Board board = repository.findById(id).orElseThrow(() -> new BoardNotFoundException(id));
@@ -60,7 +85,13 @@ public class BoardService {
       board.setTitle(title.asText());
     }
     repository.save(board);
+  }
 
+  @Transactional
+  public void update(int id, String title) {
+    Board board = repository.findById(id).orElseThrow(() -> new BoardNotFoundException(id));
+    board.setTitle(title);
+    repository.save(board);
   }
 
   @Transactional

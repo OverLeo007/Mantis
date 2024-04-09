@@ -1,6 +1,7 @@
 package ru.paskal.MantisManager.controllers;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,20 +17,22 @@ import ru.paskal.MantisManager.services.AuthService;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = {"*"})
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @Profile("with-security")
+@Slf4j
 public class AuthController {
 
   private final AuthService authService;
 
   @PostMapping("/login")
   public LoginResponse login(@RequestBody @Validated LoginRequest request) {
-    return authService.login(request.getUsername(), request.getPassword());
+    log.info("Try to login: " + request.toString());
+    return authService.login(request);
   }
 
   @PostMapping("/register")
   public LoginResponse register(@RequestBody @Validated RegisterRequest request) {
-    return authService.register(request.getUsername(), request.getPassword(), request.getEmail());
+    return authService.register(request);
   }
 
 }

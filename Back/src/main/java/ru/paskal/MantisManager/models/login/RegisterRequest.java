@@ -1,12 +1,5 @@
 package ru.paskal.MantisManager.models.login;
 
-import lombok.Builder;
-import lombok.Getter;
+public record RegisterRequest(String username, String email, String password) {
 
-@Getter
-@Builder
-public class RegisterRequest {
-  private String username;
-  private String email;
-  private String password;
 }

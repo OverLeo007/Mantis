@@ -1,21 +1,19 @@
 package ru.paskal.MantisManager.exceptions.responses;
 
-import java.sql.Timestamp;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
 public class ErrorResponse {
 
-  private String message;
+  private final String message;
 
-  private Timestamp timestamp;
+  private final String timestamp;
 
-  public ErrorResponse(String message) {
-    this.message = message;
-    this.timestamp = new Timestamp(System.currentTimeMillis());
+  public ErrorResponse(Throwable ex) {
+    this.message = ex.getMessage();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss - dd.MM.yyyy");
+    this.timestamp = LocalDateTime.now().format(formatter);
   }
 }

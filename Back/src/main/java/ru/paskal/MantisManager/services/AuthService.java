@@ -7,7 +7,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ru.paskal.MantisManager.models.login.LoginRequest;
 import ru.paskal.MantisManager.models.login.LoginResponse;
+import ru.paskal.MantisManager.models.login.RegisterRequest;
 import ru.paskal.MantisManager.security.jwt.JwtIssuer;
 import ru.paskal.MantisManager.security.user.UserPrincipal;
 
@@ -20,9 +22,9 @@ public class AuthService {
   private final UserService userService;
   private final AuthenticationManager authenticationManager;
 
-  public LoginResponse login(String username, String password) {
+  public LoginResponse login(LoginRequest request) {
     var auth = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(username, password)
+        new UsernamePasswordAuthenticationToken(request.username(), request.password())
     );
     SecurityContextHolder.getContext().setAuthentication(auth);
     var principal = (UserPrincipal) auth.getPrincipal();
@@ -30,9 +32,14 @@ public class AuthService {
     return LoginResponse.builder().token(token).build();
   }
 
-  public LoginResponse register(String username, String password, String email) {
-    userService.createNewUser(username, password, email);
-    return login(username, password);
+  public LoginResponse register(RegisterRequest request) {
+    userService.createNewUser(request.username(), request.password(), request.email());
+    return login(new LoginRequest(request.username(), request.password()));
+//        LoginRequest.builder()
+//            .username(request.getUsername())
+//            .password(request.getPassword())
+//            .build()
+//    );
   }
 
 

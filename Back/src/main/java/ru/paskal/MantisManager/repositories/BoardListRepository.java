@@ -7,6 +7,7 @@ import ru.paskal.MantisManager.entities.BoardList;
 
 @Repository
 public interface BoardListRepository extends JpaRepository<BoardList, Integer> {
+
   List<BoardList> findByBoardId(Integer id);
 
 }

@@ -1,7 +1,5 @@
 package ru.paskal.MantisManager.security;
 
-import static ru.paskal.MantisManager.utils.TestLogger.log;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -46,7 +44,6 @@ public class WithSecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-    log("sec conf");
     http
         .csrf(AbstractHttpConfigurer::disable)
         .cors(AbstractHttpConfigurer::disable)
@@ -58,10 +55,10 @@ public class WithSecurityConfig {
         .securityMatcher("/**")
         .authorizeHttpRequests(registry -> registry
             .requestMatchers("/").permitAll()
-            .requestMatchers("/auth/login").permitAll()
-            .requestMatchers("/auth/register").permitAll()
-
-            .anyRequest().authenticated()
+            .requestMatchers("/api/auth/login").permitAll()
+            .requestMatchers("/api/auth/register").permitAll()
+            .requestMatchers("/api/s/**").authenticated()
+            .requestMatchers("/api/**").permitAll()
         );
     return http.build();
   }

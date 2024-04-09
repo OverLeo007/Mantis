@@ -17,7 +17,6 @@ public class JwtIssuer {
   private final JwtProperties properties;
 
   public String issue(UserPrincipal principal) {
-    System.out.println(properties.getSecretKey());
     return JWT.create()
         .withSubject(String.valueOf(principal.getId()))
         .withExpiresAt(Instant.now().plus(Duration.of(1, ChronoUnit.DAYS)))

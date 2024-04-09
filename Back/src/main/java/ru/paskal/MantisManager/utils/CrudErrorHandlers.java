@@ -10,6 +10,7 @@ import ru.paskal.MantisManager.exceptions.notUpdated.ModelNotUpdatedException;
 import ru.paskal.MantisManager.exceptions.responses.ErrorResponse;
 
 //@Controller
+@Deprecated
 public class CrudErrorHandlers
     <
     C extends ModelNotCreatedException,
@@ -20,22 +21,22 @@ public class CrudErrorHandlers
 
   @ExceptionHandler
   private ResponseEntity<ErrorResponse> handleCreateException(C e) {
-    return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(new ErrorResponse(e), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler
   private ResponseEntity<ErrorResponse> handleReadException(R e) {
-    return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+    return new ResponseEntity<>(new ErrorResponse(e), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler
   private ResponseEntity<ErrorResponse> handleUpdateException(U e) {
-    return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(new ErrorResponse(e), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler
   private ResponseEntity<ErrorResponse> handleDeleteException(D e) {
-    return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(new ErrorResponse(e), HttpStatus.BAD_REQUEST);
   }
 
 //  @ExceptionHandler

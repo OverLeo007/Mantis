@@ -3,9 +3,7 @@ package ru.paskal.MantisManager.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -23,16 +21,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.paskal.MantisManager.dao.BoardListDao;
 import ru.paskal.MantisManager.dao.TaskDao;
-import ru.paskal.MantisManager.models.dto.BoardListDto;
+import ru.paskal.MantisManager.entities.BoardList;
 import ru.paskal.MantisManager.exceptions.JsonParsingException;
 import ru.paskal.MantisManager.exceptions.notCreated.BoardListNotCreatedException;
 import ru.paskal.MantisManager.exceptions.notDeleted.BoardListNotDeletedException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardListNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
 import ru.paskal.MantisManager.exceptions.notUpdated.BoardListNotUpdatedException;
-import ru.paskal.MantisManager.entities.BoardList;
+import ru.paskal.MantisManager.models.dto.BoardListDto;
 import ru.paskal.MantisManager.services.BoardListService;
-import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 
 //TODO: Метод свапа листов
 @RestController
@@ -40,13 +37,7 @@ import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 @RequestMapping("/api/lists")
 @RequiredArgsConstructor
 @Slf4j
-public class BoardListController extends
-    CrudErrorHandlers<
-        BoardListNotCreatedException,
-        BoardListNotFoundException,
-        BoardListNotUpdatedException,
-        BoardListNotDeletedException
-        > {
+public class BoardListController {
 
   private final BoardListService boardListService;
   private final BoardListDao boardListDao;

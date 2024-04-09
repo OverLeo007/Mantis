@@ -23,6 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     log.info("User found: " + user);
     return UserPrincipal.builder()
         .email(user.getEmail())
+        .username(username)
         .id(user.getId())
         .authorities(List.of(new SimpleGrantedAuthority(user.getSimpleRole())))
         .password(user.getPassword())

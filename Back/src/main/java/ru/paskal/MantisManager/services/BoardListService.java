@@ -16,7 +16,6 @@ import ru.paskal.MantisManager.entities.BoardList;
 import ru.paskal.MantisManager.repositories.BoardListRepository;
 import ru.paskal.MantisManager.repositories.BoardRepository;
 
-// TODO: rolling file для логов создать
 
 @Service
 @Transactional(readOnly = true)

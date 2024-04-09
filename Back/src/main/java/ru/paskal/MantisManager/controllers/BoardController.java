@@ -1,9 +1,7 @@
 package ru.paskal.MantisManager.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -20,34 +18,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.paskal.MantisManager.dao.BoardDao;
-import ru.paskal.MantisManager.models.dto.board.BoardDto;
-import ru.paskal.MantisManager.models.dto.board.BoardDtoForLink;
-import ru.paskal.MantisManager.models.dto.BoardListDto;
-import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
-import ru.paskal.MantisManager.models.dto.user.UserDtoForLink;
+import ru.paskal.MantisManager.entities.Board;
 import ru.paskal.MantisManager.exceptions.notCreated.BoardNotCreatedException;
 import ru.paskal.MantisManager.exceptions.notDeleted.BoardNotDeletedException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.UserNotFoundException;
 import ru.paskal.MantisManager.exceptions.notUpdated.BoardNotUpdatedException;
-import ru.paskal.MantisManager.entities.Board;
+import ru.paskal.MantisManager.models.dto.BoardListDto;
+import ru.paskal.MantisManager.models.dto.board.BoardDto;
+import ru.paskal.MantisManager.models.dto.board.BoardDtoForLink;
+import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
+import ru.paskal.MantisManager.models.dto.user.UserDtoForLink;
 import ru.paskal.MantisManager.services.BoardService;
-import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 
-//import static ru.paskal.MantisManager.utils.TestLogger.log;
 
 @RestController
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/boards")
 @RequiredArgsConstructor
 @Slf4j
-public class BoardController extends
-    CrudErrorHandlers<
-        BoardNotCreatedException,
-        BoardNotFoundException,
-        BoardNotUpdatedException,
-        BoardNotDeletedException
-        > {
+public class BoardController {
 
   private final BoardService boardService;
   private final BoardDao boardDao;
@@ -69,6 +59,7 @@ public class BoardController extends
     return boardService.getAll().stream()
         .map(board -> modelMapper.map(board, BoardDtoForLink.class)).toList();
   }
+
 
   @PostMapping
   @ResponseStatus(HttpStatus.OK)
@@ -95,7 +86,6 @@ public class BoardController extends
       throw new BoardNotUpdatedException(e.getMessage());
     }
     log.info("Success editing board id=" + id + ": " + json);
-
   }
 
   @DeleteMapping("/{id}")

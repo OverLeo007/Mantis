@@ -9,4 +9,7 @@ import ru.paskal.MantisManager.entities.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
   Optional<User> findByUsername(String username);
+
+
+
 }

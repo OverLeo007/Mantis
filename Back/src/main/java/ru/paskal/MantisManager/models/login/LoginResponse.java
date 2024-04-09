@@ -1,10 +1,10 @@
 package ru.paskal.MantisManager.models.login;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
 @Builder
+@Data
 public class LoginResponse {
   private final String token;
 }

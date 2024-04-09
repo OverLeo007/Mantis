@@ -26,10 +26,12 @@ public class UserController {
 
   @GetMapping("/{id}")
   public ResponseEntity<UserDtoForLoad> getUser(@PathVariable int id) {
-    System.out.println(userService.getOne(id));
+    log.info("Got user: " + userService.getOne(id));
     UserDtoForLoad user = modelMapper.map(userService.getOne(id), UserDtoForLoad.class);
 
     return new ResponseEntity<>(user, HttpStatus.OK);
   }
+
+
 
 }

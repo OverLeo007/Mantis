@@ -11,7 +11,6 @@ public class TestLogger {
   public static final String MAGENTA = "\033[35m";
 
 
-  //TODO: Rolling File сделать
   public static void log(Object o, String who) {
 
     System.out.println(

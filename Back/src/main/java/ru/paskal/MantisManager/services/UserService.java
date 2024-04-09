@@ -1,7 +1,9 @@
 package ru.paskal.MantisManager.services;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +15,10 @@ import ru.paskal.MantisManager.repositories.UserRepository;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
-  private UserRepository repository;
+  private final UserRepository repository;
 
   private final PasswordEncoder passwordEncoder;
 
@@ -27,15 +30,20 @@ public class UserService {
     return repository.findByUsername(username);
   }
 
+  @Transactional
   public User save(User user) {
     return repository.save(user);
   }
 
+  @Transactional
   public void deleteById(int id) {
     repository.deleteById(id);
   }
 
+  @Transactional
   public void createNewUser(String username, String password, String email) {
+    log.info("repo" + repository.findAll().stream().map(User::getUsername).collect(Collectors.joining()));
+    log.info("created: " + username);
     if (getOne(username).isPresent()) {
       throw new UserNotCreatedException("User with username " + username + " already exists");
     }

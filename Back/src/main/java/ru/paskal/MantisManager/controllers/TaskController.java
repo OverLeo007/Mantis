@@ -20,28 +20,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.paskal.MantisManager.dao.TaskDao;
-import ru.paskal.MantisManager.models.dto.task.TaskCreateDto;
-import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
-import ru.paskal.MantisManager.models.dto.task.TaskToEditDto;
 import ru.paskal.MantisManager.exceptions.notCreated.TaskNotCreatedException;
 import ru.paskal.MantisManager.exceptions.notDeleted.TaskNotDeletedException;
 import ru.paskal.MantisManager.exceptions.notFound.TaskNotFoundException;
 import ru.paskal.MantisManager.exceptions.notUpdated.TaskNotUpdatedException;
+import ru.paskal.MantisManager.models.dto.task.TaskCreateDto;
+import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
+import ru.paskal.MantisManager.models.dto.task.TaskToEditDto;
 import ru.paskal.MantisManager.services.TaskService;
-import ru.paskal.MantisManager.utils.CrudErrorHandlers;
 
 @RestController
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
 @Slf4j
-public class TaskController extends
-    CrudErrorHandlers<
-        TaskNotCreatedException,
-        TaskNotFoundException,
-        TaskNotUpdatedException,
-        TaskNotDeletedException
-        > {
+public class TaskController {
 
   private final TaskService taskService;
 
