@@ -38,7 +38,7 @@ public class Label {
 
   @Column(name = "label_preferences")
   @JdbcTypeCode(SqlTypes.JSON)
-  private String taskPreferences;
+  private String labelPreferences;
 
 
   public Label(String title, String info, Task task) {

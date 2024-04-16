@@ -13,7 +13,6 @@ import ru.paskal.MantisManager.entities.Task;
 import ru.paskal.MantisManager.entities.User;
 
 @Component
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TaskDao extends Dao {
 
@@ -23,6 +22,7 @@ public class TaskDao extends Dao {
 
   private final ModelMapper mm;
 
+  @Transactional(readOnly = true)
   public List<TaskDtoToSend> getTasksByListId(Integer listId) {
     var session = getSession();
     var tasks = session.createQuery(
@@ -33,7 +33,18 @@ public class TaskDao extends Dao {
     return mapTasks(tasks);
   }
 
+  @Transactional(readOnly = true)
+  public List<Task> getByListId(Integer listId) {
+    var session = getSession();
+    var tasks = session.createQuery(
+        tasksWithLabels,
+        Task.class
+    ).setParameter("listId", listId).getResultList();
+//    log(tasks.get(0).getTaskDoer(), this);
+    return tasks;
+  }
 
+  @Transactional(readOnly = true)
   public TaskDtoToSend mapTask(Task task) {
     TaskDtoToSend taskDtoToSend = new TaskDtoToSend();
     User doer = task.getTaskDoer();
@@ -56,6 +67,7 @@ public class TaskDao extends Dao {
     mm.map(task, taskDtoToSend);
     return taskDtoToSend;
   }
+
 
   public List<TaskDtoToSend> mapTasks(List<Task> tasks) {
     return tasks.stream().map(this::mapTask).toList();

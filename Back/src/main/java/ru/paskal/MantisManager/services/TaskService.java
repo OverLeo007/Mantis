@@ -2,6 +2,7 @@ package ru.paskal.MantisManager.services;
 
 
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -29,9 +30,18 @@ public class TaskService {
 
   private final ModelMapper mm;
 
-  public TaskDtoToSend getTaskById(Integer id) {
+  public TaskDtoToSend getTaskDtoById(Integer id) {
     return taskDao.mapTask(repository.findById(id).orElseThrow(() -> new TaskNotFoundException(id)));
   }
+
+  public Task getById(Integer id) {
+    return repository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+  }
+
+  public List<TaskDtoToSend> getByListId(Integer id) {
+    return taskDao.getTasksByListId(id);
+  }
+
 
   @Transactional
   public TaskDtoToSend saveTask(TaskCreateDto task) {
@@ -41,6 +51,7 @@ public class TaskService {
 
 //    repository.save(task);
   }
+
 
   @Transactional
   public void saveTask(TaskToEditDto task) {

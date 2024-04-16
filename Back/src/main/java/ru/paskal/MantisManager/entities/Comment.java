@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+// TODO: добавить цепочку комментариев (айди родителя)
 @Entity
 @Data
 @NoArgsConstructor

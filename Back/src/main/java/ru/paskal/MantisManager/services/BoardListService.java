@@ -2,17 +2,20 @@ package ru.paskal.MantisManager.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.paskal.MantisManager.dao.BoardDao;
+import ru.paskal.MantisManager.dao.BoardListDao;
+import ru.paskal.MantisManager.entities.Board;
+import ru.paskal.MantisManager.entities.BoardList;
 import ru.paskal.MantisManager.exceptions.JsonParsingException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardListNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
-import ru.paskal.MantisManager.entities.Board;
-import ru.paskal.MantisManager.entities.BoardList;
+import ru.paskal.MantisManager.models.dto.list.BoardListCreateDto;
 import ru.paskal.MantisManager.repositories.BoardListRepository;
 import ru.paskal.MantisManager.repositories.BoardRepository;
 
@@ -25,15 +28,28 @@ public class BoardListService {
 
   private final BoardRepository boardRepository;
   private final BoardDao boardDao;
+  private final BoardListDao boardListDao;
+
 
   public List<BoardList> getByBoardId(Integer boardId) {
-    return repository.findByBoardId(boardId);
+    return boardListDao.findByBoardId(boardId);
+  }
+
+  public List<BoardList> getAll() {
+    return boardListDao.findAll();
   }
 
   public BoardList getById(Integer id) {
     return repository.findById(id).orElseThrow(() -> new BoardListNotFoundException(id));
   }
 
+
+  public Integer getBoardIdByListId(Integer id) {
+    var list = repository.findById(id).orElseThrow(() -> new BoardListNotFoundException(id));
+    return list.getBoard().getId();
+  }
+
+  @Deprecated
   @Transactional
   public void update(int id, BoardList boardList) {
     BoardList existingList = repository.findById(id).orElseThrow(() -> new BoardListNotFoundException(id));
@@ -44,6 +60,17 @@ public class BoardListService {
     repository.save(existingList);
   }
 
+
+  @Transactional
+  public void update(int id, BoardList boardList, BoardList existingList) {
+    // TODO: Фиксануть смену позиции листа в борде
+    existingList.setTitle(boardList.getTitle());
+    existingList.setListPosition(boardList.getListPosition());
+
+    repository.save(existingList);
+  }
+
+  @Deprecated
   @Transactional
   public void create(JsonNode json)
       throws JsonProcessingException, JsonParsingException, BoardNotFoundException {
@@ -64,6 +91,30 @@ public class BoardListService {
       board.getLists().add(newList);
     } else {
       board.setLists(Collections.singletonList(newList));
+    }
+    boardRepository.save(board);
+    repository.save(newList);
+  }
+
+  @Transactional
+  public void create(BoardListCreateDto request)
+      throws BoardNotFoundException {
+    var title = request.getTitle();
+    var boardId = request.getBoardId();
+
+    Board board = boardRepository.findById(boardId)
+        .orElseThrow(() -> new BoardNotFoundException(boardId));
+
+    BoardList newList =  new BoardList();
+    newList.setTitle(title);
+    newList.setBoard(board);
+    newList.setListPosition(boardDao.getNewPosition(boardId));
+
+
+    if (board.getLists() != null) {
+      board.getLists().add(newList);
+    } else {
+      board.setLists(new ArrayList<>(Collections.singletonList(newList)));
     }
     boardRepository.save(board);
     repository.save(newList);

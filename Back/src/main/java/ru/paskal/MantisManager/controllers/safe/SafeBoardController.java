@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.controllers;
+package ru.paskal.MantisManager.controllers.safe;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -29,6 +29,7 @@ import ru.paskal.MantisManager.models.dto.board.BoardTitleRequest;
 import ru.paskal.MantisManager.security.user.UserPrincipal;
 import ru.paskal.MantisManager.security.user.UserPrincipalService;
 import ru.paskal.MantisManager.services.BoardService;
+import ru.paskal.MantisManager.utils.EntityMapper;
 
 @RestController
 @CrossOrigin(origins = {"*"})
@@ -39,19 +40,22 @@ public class SafeBoardController {
 
   private final BoardService boardService;
   private final UserPrincipalService userPrincipalService;
-  private final ModelMapper modelMapper;
+//  private final ModelMapper modelMapper;
+  private final EntityMapper em;
 
+
+  // TODO: Глобал админ не может иметь доступ ко всей информации (пересмотреть доступ для админа)
   @GetMapping
-  public List<BoardDtoForLink> getBoards(@AuthenticationPrincipal UserPrincipal principal) {
+  public List<BoardDtoForLink> getBoards(
+      @AuthenticationPrincipal UserPrincipal principal
+  ) {
     try {
       User user = userPrincipalService.getUserFromPrincipal(principal);
       if (user.getSimpleRole().equals("ROLE_USER")) {
         log.info("Got boards by userid: " + user.getId());
-        return boardService.getByUser(user.getId()).stream()
-            .map(board -> modelMapper.map(board, BoardDtoForLink.class)).toList();
+        return em.mapToBoardLinks(boardService.getByUser(user.getId()));
       } else if (user.getSimpleRole().equals("ROLE_ADMIN")) {
-        return boardService.getAll().stream()
-            .map(board -> modelMapper.map(board, BoardDtoForLink.class)).toList();
+        return em.mapToBoardLinks(boardService.getAll());
       }
     } catch (UserNotFoundException e) {
       throw new BoardNotFoundException(e.getMessage());

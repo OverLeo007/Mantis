@@ -1,14 +1,11 @@
-package ru.paskal.MantisManager.controllers;
-
-
-import static ru.paskal.MantisManager.utils.staticUtils.okResponseWrapper;
+package ru.paskal.MantisManager.controllers.safe;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,72 +24,78 @@ import ru.paskal.MantisManager.exceptions.notUpdated.TaskNotUpdatedException;
 import ru.paskal.MantisManager.models.dto.task.TaskCreateDto;
 import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
 import ru.paskal.MantisManager.models.dto.task.TaskToEditDto;
+import ru.paskal.MantisManager.security.user.UserPrincipal;
+import ru.paskal.MantisManager.security.user.UserPrincipalService;
 import ru.paskal.MantisManager.services.TaskService;
+import ru.paskal.MantisManager.utils.EntityMapper;
 
 @RestController
 @CrossOrigin(origins = {"*"})
-@RequestMapping("/api/tasks")
+@RequestMapping("/api/s/tasks")
 @RequiredArgsConstructor
 @Slf4j
-public class TaskController {
+public class SafeTaskController {
 
   private final TaskService taskService;
-
   private final TaskDao taskDao;
-
-  private final ModelMapper mm;
+  private final EntityMapper em;
+  private final UserPrincipalService userPrincipalService;
 
 
   @GetMapping
-  public ResponseEntity<List<TaskDtoToSend>> getByList(@RequestParam(name = "list_id") Integer listId) {
-    log.info("Trying to tasks by list id=" + listId);
-    var task = taskDao.getTasksByListId(listId);
-    log.info("Got task by list id=" + listId + ": " + task);
-    return okResponseWrapper(task);
+  public List<TaskDtoToSend> getByList(
+      @RequestParam(name = "list_id") Integer listId,
+      @AuthenticationPrincipal UserPrincipal principal
+  ) {
+    userPrincipalService.getAccessToBoardList(principal, listId);
+    return taskDao.getTasksByListId(listId);
   }
 
   @GetMapping("{id}")
-  public ResponseEntity<TaskDtoToSend> getById(@PathVariable(name = "id") Integer taskId) {
-    log.info("Trying to tasks by id=" + taskId);
-    var task = taskService.getTaskById(taskId);
-    log.info("Got task by id=" + taskId + ": " + task);
-    return okResponseWrapper(task);
+  public TaskDtoToSend getById(
+      @PathVariable(name = "id") Integer taskId,
+      @AuthenticationPrincipal UserPrincipal principal
+      ) {
+    userPrincipalService.getAccessToTask(principal, taskId);
+    return taskService.getTaskDtoById(taskId);
   }
 
   @PostMapping
-  public ResponseEntity<TaskDtoToSend> createTask(@RequestBody TaskCreateDto taskCreateDto) {
+  public TaskDtoToSend createTask(
+      @RequestBody TaskCreateDto taskCreateDto,
+      @AuthenticationPrincipal UserPrincipal principal
+  ) {
     try {
-      log.info("Trying to create task: " + taskCreateDto);
-      var task = taskService.saveTask(taskCreateDto);
-      log.info("Success created task: " + task);
-      return okResponseWrapper(task);
+      userPrincipalService.getAccessToBoardList(principal, taskCreateDto.getListId());
+      return taskService.saveTask(taskCreateDto);
     } catch (Exception e) {
-      log.info("Failed to create task: " + taskCreateDto);
       throw new TaskNotCreatedException(e.getMessage());
     }
   }
 
   @PutMapping
-  public ResponseEntity<HttpStatus> editTask(@RequestBody TaskToEditDto taskToEditDto) {
+  public ResponseEntity<HttpStatus> editTask(
+      @RequestBody TaskToEditDto taskToEditDto,
+      @AuthenticationPrincipal UserPrincipal principal
+  ) {
     try {
-      log.info("Trying to edit task: " + taskToEditDto);
+      userPrincipalService.getAccessToTask(principal, taskToEditDto.getId());
       taskService.saveTask(taskToEditDto);
-      log.info("Success edit task: " + taskToEditDto);
     } catch (Exception e) {
-      log.info("Failed to edit task: " + taskToEditDto);
       throw new TaskNotUpdatedException(e.getMessage());
     }
     return ResponseEntity.ok().build();
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<HttpStatus> deleteTask(@PathVariable Integer id) {
+  public ResponseEntity<HttpStatus> deleteTask(
+      @PathVariable Integer id,
+      @AuthenticationPrincipal UserPrincipal principal
+  ) {
     try {
-      log.info("Trying to delete task id=" + id);
+      userPrincipalService.getAccessToTask(principal, id);
       taskService.delete(id);
-      log.info("Success deleting task id=" + id);
     } catch (TaskNotFoundException e) {
-      log.info("Failed deleting task id=" + id);
       throw new TaskNotDeletedException(e.getMessage());
     }
     return ResponseEntity.ok().build();

@@ -41,11 +41,13 @@ public class BoardService {
     }
   }
 
+  @Deprecated(forRemoval = true)
   public List<Board> getByUserId(int uid) {
     return repository.findByUsersId(uid);
   }
 
   @Transactional
+  @Deprecated(forRemoval = true)
   public void save(String title, Integer creator_id) {
     Board board = new Board();
     board.setTitle(title);
@@ -79,6 +81,7 @@ public class BoardService {
 
 
   @Transactional
+  @Deprecated(forRemoval = true)
   public void update(int id, JsonNode title) {
     Board board = repository.findById(id).orElseThrow(() -> new BoardNotFoundException(id));
     if (!title.isNull()) {

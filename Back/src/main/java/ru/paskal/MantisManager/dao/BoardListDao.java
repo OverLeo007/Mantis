@@ -42,7 +42,14 @@ public class BoardListDao extends Dao {
         BoardList.class).getResultList();
   }
 
-  public List<BoardList> getLists(Integer boardId) {
+  public List<BoardList> findAll() {
+    Session session = getSession();
+    return session.createQuery(
+        allLists,
+        BoardList.class).getResultList();
+  }
+
+  public List<BoardList> findByBoardId(Integer boardId) {
     if (!boardRepository.existsById(boardId)) {
       throw new BoardNotFoundException(boardId);
     }
@@ -52,8 +59,13 @@ public class BoardListDao extends Dao {
         BoardList.class).setParameter("boardId", boardId).getResultList();
   }
 
-
-
-
-
+  public List<BoardList> getLists(Integer boardId) {
+    if (!boardRepository.existsById(boardId)) {
+      throw new BoardNotFoundException(boardId);
+    }
+    Session session = getSession();
+    return session.createQuery(
+        listsByBoard,
+        BoardList.class).setParameter("boardId", boardId).getResultList();
+  }
 }

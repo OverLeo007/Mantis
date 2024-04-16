@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.controllers;
+package ru.paskal.MantisManager.controllers.notSafe;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
@@ -24,7 +24,7 @@ import ru.paskal.MantisManager.exceptions.notDeleted.BoardNotDeletedException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.UserNotFoundException;
 import ru.paskal.MantisManager.exceptions.notUpdated.BoardNotUpdatedException;
-import ru.paskal.MantisManager.models.dto.BoardListDto;
+import ru.paskal.MantisManager.models.dto.list.BoardListDto;
 import ru.paskal.MantisManager.models.dto.board.BoardDto;
 import ru.paskal.MantisManager.models.dto.board.BoardDtoForLink;
 import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;

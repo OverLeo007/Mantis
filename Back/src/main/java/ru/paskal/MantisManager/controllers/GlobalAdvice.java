@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import ru.paskal.MantisManager.exceptions.AccessForbiddenException;
 import ru.paskal.MantisManager.exceptions.notCreated.ModelNotCreatedException;
 import ru.paskal.MantisManager.exceptions.notDeleted.ModelNotDeletedException;
 import ru.paskal.MantisManager.exceptions.notFound.ModelNotFoundException;
@@ -35,6 +36,8 @@ public class GlobalAdvice {
     exceptionMappings.put(NoHandlerFoundException.class, new Pair<>(HttpStatus.NOT_FOUND, Level.WARN));
     exceptionMappings.put(BadCredentialsException.class, new Pair<>(HttpStatus.UNAUTHORIZED, Level.WARN));
     exceptionMappings.put(HttpMessageNotReadableException.class, new Pair<>(HttpStatus.BAD_REQUEST, Level.INFO));
+    exceptionMappings.put(AccessForbiddenException.class, new Pair<>(HttpStatus.UNAUTHORIZED, Level.WARN));
+
   }
 
   @ExceptionHandler(
@@ -45,7 +48,8 @@ public class GlobalAdvice {
           ModelNotDeletedException.class,
           NoHandlerFoundException.class,
           BadCredentialsException.class,
-          HttpMessageNotReadableException.class
+          HttpMessageNotReadableException.class,
+          AccessForbiddenException.class
       }
   )
   public ResponseEntity<ErrorResponse> handleExceptionByDefault(Exception ex) {

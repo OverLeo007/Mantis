@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.controllers;
+package ru.paskal.MantisManager.controllers.notSafe;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.paskal.MantisManager.dao.BoardListDao;
 import ru.paskal.MantisManager.dao.TaskDao;
 import ru.paskal.MantisManager.entities.BoardList;
 import ru.paskal.MantisManager.exceptions.JsonParsingException;
@@ -28,7 +27,7 @@ import ru.paskal.MantisManager.exceptions.notDeleted.BoardListNotDeletedExceptio
 import ru.paskal.MantisManager.exceptions.notFound.BoardListNotFoundException;
 import ru.paskal.MantisManager.exceptions.notFound.BoardNotFoundException;
 import ru.paskal.MantisManager.exceptions.notUpdated.BoardListNotUpdatedException;
-import ru.paskal.MantisManager.models.dto.BoardListDto;
+import ru.paskal.MantisManager.models.dto.list.BoardListDto;
 import ru.paskal.MantisManager.services.BoardListService;
 
 //TODO: Метод свапа листов
@@ -40,7 +39,6 @@ import ru.paskal.MantisManager.services.BoardListService;
 public class BoardListController {
 
   private final BoardListService boardListService;
-  private final BoardListDao boardListDao;
 
   private final TaskDao taskDao;
   private final ModelMapper modelMapper;
@@ -58,12 +56,12 @@ public class BoardListController {
     log.info("Got lists by board id: " + boardId);
     if (boardId != null) {
       try {
-        return boardListDao.getLists(boardId).stream().map(this::convertListToDto).toList();
+        return boardListService.getByBoardId(boardId).stream().map(this::convertListToDto).toList();
       } catch (BoardNotFoundException e) {
         throw new BoardListNotFoundException(e.getMessage());
       }
     } else {
-      return boardListDao.getLists().stream().map(this::convertListToDto).toList();
+      return boardListService.getAll().stream().map(this::convertListToDto).toList();
     }
   }
 

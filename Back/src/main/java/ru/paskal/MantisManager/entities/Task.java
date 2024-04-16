@@ -20,6 +20,7 @@ import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+// TODO: Приложение мультимедиа к таскам
 @Entity
 @Data
 @Table(name = "tasks")
@@ -41,6 +42,7 @@ public class Task {
 
   @Column(name = "due_date")
   private Date dueDate;
+
   @Column(name = "task_preferences")
   @JdbcTypeCode(SqlTypes.JSON)
   private String taskPreferences;
