@@ -24,10 +24,9 @@ export default {
   <div class="login-scr">
       <div class="logo-card">
         <p id="logo">ЛОГОТИП</p>
-        <p class="text">Лишь стремящиеся вытеснить традиционное производство
-          , нанотехнологии, которые представляют собой яркий пример
-          континентально-европейского типа политической культуры, б
-          удут ассоциативно распределены по отраслям. </p>
+        <p class="text"> Мы рады приветствовать вас в нашем инструменте управления задачами!</p>
+        <p class="text">Здесь вы сможете эффективно организовывать свою работу, отслеживать процесс выполнения
+          задач и сотрудничать с коллегами! Управляйте проектами грамотно с Mantis!</p>
       </div>
       <div class="login-form">
         <div>
@@ -75,7 +74,7 @@ export default {
 
 .logo-card {
   width: 50%;
-  background-image: linear-gradient(rgba(16, 75, 119, 1), rgba(23, 67, 101, .3)), url("@/assets/bg.jpg");
+  background-image: linear-gradient(rgba(16, 75, 119, 1), rgba(23, 67, 101, .4)), url("@/assets/bg.jpg");
   background-position: center;
   background-size: cover;
   vertical-align: top;
@@ -92,9 +91,10 @@ export default {
 }
 
 .text {
-  margin-top: 30px;
   text-align: center;
   color: #FFFFFF;
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .submit-button {
@@ -127,7 +127,9 @@ input {
 #logo {
   font-size: 30px;
   color: #FFFFFF;
-  //font-family: "Arial", serif;
+  margin-bottom: 30px;
+
+//font-family: "Arial", serif;
 
 }
 

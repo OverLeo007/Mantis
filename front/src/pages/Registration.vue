@@ -1,5 +1,19 @@
 <script>
+import {useVuelidate} from '@vuelidate/core'
+import {required, minLength, email, sameAs, maxLength} from '@vuelidate/validators'
+import * as $v from "@vuelidate/validators";
+
 export default {
+  computed: {
+    $v() {
+      return $v
+    }
+  },
+  setup() {
+    return {
+      v$: useVuelidate()
+    }
+  },
   data() {
     return {
       login: '',
@@ -8,11 +22,32 @@ export default {
       password_repeat: ''
     };
   },
+
+  validations() {
+    return {
+      login: {required, minLength: minLength(3), maxLengthValue: maxLength(30)},
+      email: {required, email},
+      password: {required, minLength: minLength(6), maxLengthValue: maxLength(30)},
+      password_repeat: {required, sameAsPassword: sameAs('password')}
+    }
+  },
+
   methods: {
     submitForm() {
-      console.log('Отправляем данные регистрации: (шутка, мы ниче не отправляем пока)', this.login, this.email, this.password);
+      const isFormCorrect = this.v$.$validate()
+      if (!isFormCorrect) {
+        return
+      }
       this.$router.push({path: "/login"})
+      // if (this.password !== this.password_repeat) {
+      //   alert('Пароли не совпадают!'); // затычка для дураков
+      //   return;
+      // }
+      // console.log('Отправляем данные регистрации: (шутка, мы ниче не отправляем пока)', this.login, this.email, this.password);
+      // this.$router.push({path: "/login"})
     },
+
+
     logIn() {
       this.$router.push({path: "/login"})
     }
@@ -24,39 +59,37 @@ export default {
   <div class="login-scr">
     <div class="logo-card">
       <p id="logo">ЛОГОТИП</p>
-      <p class="text">Лишь стремящиеся вытеснить традиционное производство
-        , нанотехнологии, которые представляют собой яркий пример
-        континентально-европейского типа политической культуры, б
-        удут ассоциативно распределены по отраслям. </p>
+      <p class="text"> Мы рады приветствовать вас в нашем инструменте управления задачами!</p>
+      <p class="text">Здесь вы сможете эффективно организовывать свою работу, отслеживать процесс выполнения
+        задач и сотрудничать с коллегами! Управляйте проектами грамотно с Mantis!</p>
     </div>
     <div class="login-form">
-    <h2>РЕГИСТРАЦИЯ</h2>
-    <form @submit.prevent="submitForm">
-      <div class="form-group">
-        <input placeholder="Логин" type="text" id="login" v-model="login" required>
-      </div>
-      <div class="form-group">
-        <input placeholder="Почта" type="email" id="email" v-model="email" required>
-      </div>
-      <div class="form-group">
-        <input placeholder="Пароль" type="password" id="password" v-model="password" required>
-      </div>
-      <div class="form-group">
-        <input placeholder="Повтор пароля" type="password" id="password" v-model="password_repeat" required>
-      </div>
-      <v-btn
-          class="submit-button"
-          type="submit"
-          color="primary"
-          @click=""
-      >
-        Зарегестрироваться
-      </v-btn>
-      <div>
-        <p class="text-but" @click="logIn">Войти</p>
-      </div>
-    </form>
-  </div>
+      <h2>РЕГИСТРАЦИЯ</h2>
+      <form @submit.prevent="submitForm">
+        <div class="form-group">
+          <input placeholder="Логин" type="text" id="login" v-model="login">
+<!--          <p v-if="login.$error"> Ошибка </p>-->
+        </div>
+        <div class="form-group">
+          <input placeholder="Почта" type="email" id="email" v-model="email">
+        </div>
+        <div class="form-group">
+          <input placeholder="Пароль" type="password" id="password" v-model="password">
+        </div>
+        <div class="form-group">
+          <input placeholder="Повтор пароля" type="password" id="password_repeat" v-model="password_repeat">
+        </div>
+        <v-btn
+            class="submit-button"
+            type="submit"
+        >
+          Зарегестрироваться
+        </v-btn>
+        <div>
+          <p class="text-but" @click="logIn">Войти</p>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -79,7 +112,7 @@ export default {
 
 .logo-card {
   width: 50%;
-  background-image: linear-gradient(rgba(16, 75, 119, 1), rgba(23, 67, 101, .3)), url("@/assets/bg.jpg");
+  background-image: linear-gradient(rgba(16, 75, 119, 1), rgba(23, 67, 101, .4)), url("@/assets/bg.jpg");
   background-position: center;
   background-size: cover;
   vertical-align: top;
@@ -96,9 +129,10 @@ export default {
 }
 
 .text {
-  margin-top: 30px;
   text-align: center;
   color: #FFFFFF;
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .submit-button {
@@ -111,8 +145,7 @@ export default {
   align-items: center;
   margin: 40px auto 10px;
   background: #AFD7F4;
-//background: linear-gradient(to right, #FFFFFF, #AFD7F4);
-//color: #AFD7F4;
+//background: linear-gradient(to right, #FFFFFF, #AFD7F4); //color: #AFD7F4;
 }
 
 .form-group {
@@ -131,6 +164,7 @@ input {
 #logo {
   font-size: 30px;
   color: #FFFFFF;
+  margin-bottom: 30px;
 //font-family: "Arial", serif;
 
 }

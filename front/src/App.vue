@@ -71,6 +71,11 @@ export default {
         this.drawer = false
       }
       return curPath !== '/login' && curPath !== '/signin'
+    },
+
+    showView() {
+      let curPath = this.$route.path;
+      return curPath.startsWith('/board') || curPath === '/calendar'
     }
   },
 
@@ -85,11 +90,19 @@ export default {
     <v-navigation-drawer class="left-sidebar"  v-model="drawer">
       <v-list-item :height="65" title="Логотип"></v-list-item>
       <v-divider></v-divider>
-      <v-list-item :height="65" title="Доски" @click="goToBoards"></v-list-item>
+      <v-list-item id="desks" class="sidebar-button" title="Доски" @click="goToBoards"></v-list-item>
+      <div v-show="showView()">
+        <v-list-item class="sidebar-btngroup-name"  title="Режим просмотра"></v-list-item>
+        <v-list-item class="sidebar-button" title="Колонки" @click=""></v-list-item>
+        <v-list-item class="sidebar-button" title="Календарь" @click=""></v-list-item>
+      </div>
+
+      <v-list-item class="sidebar-btngroup-name" title="Доступные доски"></v-list-item>
+
       <v-list-item v-for="board in boards"
+                   class="sidebar-button"
                    :key="board.id"
                    :title="board.title"
-                   :height="65"
                    @click="goToBoardById(board.id, board.title)"
                    ></v-list-item>
     </v-navigation-drawer>
@@ -117,11 +130,35 @@ export default {
 }
 
 .v-list-item :deep(.v-list-item-title) {
-  font-size: 20px;
+  font-size: 18px;
+}
+
+.sidebar-button {
+  padding-left: 35px;
+  height: 28px;
+  text-align: start;
+}
+
+.sidebar-btngroup-name {
+  padding-left: 25px;
+  text-align: start;
+  margin-top: 10px;
+  //height: 10px;
+}
+
+.sidebar-btngroup-name:deep(.v-list-item-title) {
+  font-weight: bold;
+  font-size: 18px;
+  height: 25px;
 }
 
 #add-card-button {
   border-radius: 20px;
+}
+
+#desks {
+  padding-left: 25px;
+  margin-top: 10px
 }
 
 .left-sidebar {
@@ -133,4 +170,6 @@ export default {
   border: 1px solid #C0CFD3;
   height: 65px;
 }
+
+
 </style>
