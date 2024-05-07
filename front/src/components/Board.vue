@@ -1,11 +1,6 @@
 <script>
 import EditableCardTitle from "@/components/EditableCardTitle.vue";
-import axios from "axios";
-
-const baseURL = 'http://26.171.167.108:8080/api/boards';
-const api = axios.create({
-  baseURL: baseURL,
-})
+import BoardsApi from "@/api/boards/BoardsApi.js";
 
 export default {
   name: "Board",
@@ -21,9 +16,7 @@ export default {
   methods: {
     async editBoard() {
       try {
-        await api.put(`/${this.board.id}`, {
-          title: this.board.title,
-        })
+        await BoardsApi.editBoard(this.board.id, this.board.title);
         this.$emit('boardEdited');
       } catch (error) {
         console.log(error);

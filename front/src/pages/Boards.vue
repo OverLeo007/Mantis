@@ -1,11 +1,6 @@
 <script>
 import Board from "@/components/Board.vue";
-import axios from "axios";
-
-const baseURL = 'http://26.171.167.108:8080/api/boards';
-const api = axios.create({
-  baseURL: baseURL,
-})
+import BoardsApi from "@/api/boards/BoardsApi.js";
 
 
 export default {
@@ -19,7 +14,7 @@ export default {
   methods: {
     async getBoards() {
       try {
-        const response = await api.get("");
+        const response = await BoardsApi.getBoards();
         this.boards = response.data;
       } catch (error) {
         console.log(error);
@@ -33,10 +28,9 @@ export default {
     },
     async createBoard() {
       try {
-        await api.post("", {
-          title: "untitled",
-          user_id: 1,
-        });
+        await BoardsApi.createBoard(
+            "untitled"
+        )
         await this.getBoards();
         this.$emit('boardUpdated', this.boards);
       } catch (error) {
@@ -45,7 +39,7 @@ export default {
     },
     async deleteBoard(id) {
       try {
-        await api.delete(`/${id}`);
+        await BoardsApi.deleteBoard(id);
         this.boards = this.boards.filter(x => {
           return x.id !== id;
         })

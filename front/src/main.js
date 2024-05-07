@@ -1,5 +1,6 @@
 import '@mdi/font/css/materialdesignicons.css'
 import './assets/main.css'
+import BasesApi from "@/api/BasesApi.js";
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -21,7 +22,9 @@ import router from "@/router.js";
 // Mavon
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import axios from "axios";
 
+BasesApi.addToken();
 
 createApp(App)
     .use(vuetify)

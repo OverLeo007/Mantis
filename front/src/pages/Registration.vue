@@ -1,4 +1,6 @@
 <script>
+import AuthApi from "@/api/auth/AuthApi.js";
+
 export default {
   data() {
     return {
@@ -9,12 +11,18 @@ export default {
     };
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       console.log('Отправляем данные регистрации: (шутка, мы ниче не отправляем пока)', this.login, this.email, this.password);
-      this.$router.push({path: "/login"})
+      try {
+        await AuthApi.register(this.login, this.email, this.password);
+      } catch (error) {
+        console.log(error);
+      }
+
+      this.$router.push({path: "/login"});
     },
     logIn() {
-      this.$router.push({path: "/login"})
+      this.$router.push({path: "/login"});
     }
   }
 };

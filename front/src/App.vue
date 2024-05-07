@@ -1,11 +1,8 @@
 <script>
 import Board from "@/components/Board.vue";
 import axios from "axios";
-
-const boardsURL = 'http://26.171.167.108:8080/api/boards';
-const api = axios.create({
-  baseURL: boardsURL,
-})
+import BoardsApi from "@/api/boards/BoardsApi.js";
+import mantis_logo from "@/assets/mantis_logo.png";
 
 export default {
   components: {Board},
@@ -35,7 +32,7 @@ export default {
   methods: {
     async getBoards() {
       try {
-        const response = await api.get("");
+        const response = await BoardsApi.getBoards();
         this.boards = response.data;
       } catch (error) {
         console.log(error);
@@ -83,7 +80,12 @@ export default {
 <template>
   <v-app id="inspire">
     <v-navigation-drawer class="left-sidebar"  v-model="drawer">
-      <v-list-item :height="65" title="Логотип"></v-list-item>
+      <v-list-item :height="65">
+        <img
+            style="height: 55px"
+            src="@/assets/mantis_logo.png" alt=""
+        />
+      </v-list-item>
       <v-divider></v-divider>
       <v-list-item :height="65" title="Доски" @click="goToBoards"></v-list-item>
       <v-list-item v-for="board in boards"

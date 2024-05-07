@@ -3,11 +3,12 @@ import axios from "axios";
 import EditableCardTitle from "@/components/EditableCardTitle.vue";
 import Card from "@/components/Card.vue";
 import CardHandler from "@/components/CardHandler.vue";
+import ListsApi from "@/api/lists/ListsApi.js";
 
-const baseURL = "http://26.171.167.108:8080/api/lists"
-const api = axios.create({
-  baseURL: baseURL,
-})
+// const baseURL = "http://26.171.167.108:8080/api/lists"
+// const api = axios.create({
+//   baseURL: baseURL,
+// })
 
 export default {
   name: "List",
@@ -24,11 +25,16 @@ export default {
   methods: {
     async editList() {
       try {
-        const response = await api.put(`/${this.list.id}`, {
-          id: this.list.id,
-          title: this.list.title,
-          listPosition: this.list.listPosition,
-        })
+        // const response = await api.put(`/${this.list.id}`, {
+        //   id: this.list.id,
+        //   title: this.list.title,
+        //   listPosition: this.list.listPosition,
+        // })
+        await ListsApi.editList(
+            this.list.id,
+            this.list.title,
+            this.list.listPosition
+        );
       } catch (error) {
         console.log(error);
       }

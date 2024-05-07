@@ -3,11 +3,12 @@ import EditableCardTitle from "@/components/EditableCardTitle.vue";
 import axios from "axios";
 import { DateTime, Duration } from "luxon";
 import TimeConverter from "../utils/TimeConverter.js";
+import TasksApi from "@/api/tasks/TasksApi.js";
 
-const baseURL = 'http://26.171.167.108:8080/api/tasks'
-const api = axios.create({
-  baseURL: baseURL
-})
+// const baseURL = 'http://26.171.167.108:8080/api/tasks'
+// const api = axios.create({
+//   baseURL: baseURL
+// })
 
 
 
@@ -60,14 +61,22 @@ export default {
           }
         }
 
-        const response = await api.put("", {
-          id: this.card.id,
-          taskTitle: this.card.taskTitle,
-          taskText: this.mavonText,
-          taskPosition: this.card.taskPosition,
-          dueDate: Date.now(),
-          taskPreferences: this.card.taskPreferences
-        })
+        // const response = await api.put("", {
+        //   id: this.card.id,
+        //   taskTitle: this.card.taskTitle,
+        //   taskText: this.mavonText,
+        //   taskPosition: this.card.taskPosition,
+        //   dueDate: Date.now(),
+        //   taskPreferences: this.card.taskPreferences
+        // })
+        await TasksApi.editTask(
+            this.card.id,
+            this.card.taskTitle,
+            this.mavonText,
+            this.card.taskPosition,
+            Date.now(),
+            this.card.taskPreferences
+        )
       } catch (error) {
         console.log(error);
       }

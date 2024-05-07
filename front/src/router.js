@@ -5,17 +5,32 @@ import BoardPage from "@/pages/BoardPage.vue";
 import CalendarPage from "@/pages/CalendarPage.vue";
 import Login from "@/pages/Login.vue";
 import Registration from "@/pages/Registration.vue";
+import AuthApi from "@/api/auth/AuthApi.js";
 
 
 const routes = [
     { path: '/', component: Boards },
     { path: '/board/:id', component: BoardPage, name: 'board'},
     { path: '/calendar', component: CalendarPage },
-    { path: '/login', component: Login},
-    { path: '/signin', component: Registration}
+    { path: '/login', component: Login, name: 'login'},
+    { path: '/signin', component: Registration, name: 'signin'}
 ];
 
-export default createRouter({
+const router = createRouter({
     history: createWebHashHistory(),
-    routes,
+    routes
+})
+
+router.beforeEach(async (to, from, next) => {
+    const canAccess = await AuthApi.canUserAccess();
+
+    if (!canAccess && (to.name === 'login' || to.name === 'signin')) {
+        next();
+    } else if (!canAccess && to.name !== 'login') {
+        next({name: 'login'})
+    } else {
+        next();
+    }
 });
+
+export default router;
