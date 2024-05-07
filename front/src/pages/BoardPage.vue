@@ -1,12 +1,7 @@
 <script>
-import axios from "axios";
 import List from "@/components/List.vue";
 import ListsApi from "@/api/lists/ListsApi.js";
 
-// const baseURL = "http://26.171.167.108:8080/api/lists"
-// const api = axios.create({
-//   baseURL: baseURL
-// })
 
 export default {
   components: {List},
@@ -21,7 +16,6 @@ export default {
     async getLists() {
       const boardId = this.$route.query.boardId;
       try {
-        // const response = await api.get("", { params: {board: boardId} });
         const response = await ListsApi.getListsByBoard(boardId);
         this.lists = response.data;
         this.lists.sort((a, b) => a.listPosition - b.listPosition);
@@ -31,16 +25,11 @@ export default {
       }
     },
     async createList() {
-      // await api.post("", {
-      //   title: "untitled",
-      //   boardId: this.headerData.boardId,
-      // });
       await ListsApi.createList("untitled", this.headerData.boardId);
       await this.getLists();
     },
     async deleteList(id) {
       try {
-        // await api.delete(`/${id}`);
         await ListsApi.deleteList(id);
         this.lists = this.lists.filter(x => {
           return x.id !== id;

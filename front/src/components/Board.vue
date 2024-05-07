@@ -10,7 +10,7 @@ export default {
   },
   data() {
     return {
-      board: this.data,
+      board: this.data
     }
   },
   methods: {

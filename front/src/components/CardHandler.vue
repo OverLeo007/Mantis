@@ -1,12 +1,7 @@
 <script>
 import Card from "@/components/Card.vue";
-import axios from "axios";
 import TasksApi from "@/api/tasks/TasksApi.js";
 
-// const baseURL = "http://26.171.167.108:8080/api/tasks";
-// const api = axios.create({
-//   baseURL: baseURL
-// })
 
 export default {
   name: "CardHandler",
@@ -23,7 +18,6 @@ export default {
   methods: {
     async deleteCard(id) {
       try {
-        // await api.delete(`/${id}`);
         await TasksApi.deleteTask(id);
         this.cardList = this.cardList.filter(x => {
           return x.id !== id;
@@ -36,11 +30,6 @@ export default {
       let nextTaskPosition = Math.max(...this.cardList.map(x => x.taskPosition));
       if (nextTaskPosition === -Infinity) nextTaskPosition = 0;
       try {
-        // const response = await api.post("", {
-        //   taskTitle: "untitled",
-        //   taskPosition: nextTaskPosition + 1,
-        //   listId: this.listId,
-        // });
         const response = await TasksApi.createTask(
             "untitled",
             nextTaskPosition + 1,

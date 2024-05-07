@@ -26,7 +26,6 @@ export default {
         return
       }
 
-      localStorage.removeItem('auth_token');
       try {
         const response = await AuthApi.login(this.login, this.password);
         console.log(response)
