@@ -1,16 +1,31 @@
 <script>
 import AuthApi from "@/api/auth/AuthApi.js";
 
+import {useVuelidate} from "@vuelidate/core";
+import {maxLength, minLength, required} from "@vuelidate/validators";
+
 export default {
   data() {
     return {
+      v$: useVuelidate(),
       login: '',
       email: '',
       password: ''
     };
   },
+  validations() {
+    return {
+      login: {required, minLength: minLength(3), maxLengthValue: maxLength(30)},
+      password: {required, minLength: minLength(6), maxLengthValue: maxLength(30)},
+    }
+  },
   methods: {
     async submitForm() {
+      this.v$.$validate()
+      if (this.v$.$error) {
+        return
+      }
+
       localStorage.removeItem('auth_token');
       try {
         const response = await AuthApi.login(this.login, this.password);
@@ -33,20 +48,21 @@ export default {
   <div class="login-scr">
       <div class="logo-card">
         <p id="logo">ЛОГОТИП</p>
-        <p class="text">Лишь стремящиеся вытеснить традиционное производство
-          , нанотехнологии, которые представляют собой яркий пример
-          континентально-европейского типа политической культуры, б
-          удут ассоциативно распределены по отраслям. </p>
+        <p class="text"> Мы рады приветствовать вас в нашем инструменте управления задачами!</p>
+        <p class="text">Здесь вы сможете эффективно организовывать свою работу, отслеживать процесс выполнения
+          задач и сотрудничать с коллегами! Управляйте проектами грамотно с Mantis!</p>
       </div>
       <div class="login-form">
         <div>
           <h2>ВХОД</h2>
           <form @submit.prevent="submitForm">
             <div class="form-group">
-              <input placeholder="Логин" type="text" id="login" v-model="login" required>
+              <input placeholder="Логин" type="text" id="login" v-model="login">
+              <p class="err-message" v-if="v$.login.$error">! {{ v$.login.$errors[0].$message }}</p>
             </div>
             <div class="form-group">
-              <input placeholder="Пароль" type="password" id="password" v-model="password" required>
+              <input placeholder="Пароль" type="text" id="password" v-model="password">
+              <p class="err-message" v-if="v$.password.$error">! {{ v$.password.$errors[0].$message }}</p>
             </div >
             <v-btn
                 class="submit-button"
@@ -84,7 +100,7 @@ export default {
 
 .logo-card {
   width: 50%;
-  background-image: linear-gradient(rgba(16, 75, 119, 1), rgba(23, 67, 101, .3)), url("@/assets/bg.jpg");
+  background-image: linear-gradient(rgba(16, 75, 119, 1), rgba(23, 67, 101, .4)), url("@/assets/bg.jpg");
   background-position: center;
   background-size: cover;
   vertical-align: top;
@@ -100,10 +116,18 @@ export default {
   padding: 80px 20px 20px;
 }
 
+.err-message {
+  margin-right: 20px;
+  margin-left: 20px;
+  font-size: 10px;
+  color: red;
+}
+
 .text {
-  margin-top: 30px;
   text-align: center;
   color: #FFFFFF;
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .submit-button {
@@ -136,7 +160,9 @@ input {
 #logo {
   font-size: 30px;
   color: #FFFFFF;
-  //font-family: "Arial", serif;
+  margin-bottom: 30px;
+
+//font-family: "Arial", serif;
 
 }
 

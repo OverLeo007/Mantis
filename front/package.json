@@ -9,12 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
     "axios": "^1.6.2",
     "luxon": "^3.4.4",
     "mavon-editor": "^3.0.1",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5",
     "vue-simple-calendar": "^7.1.0",
+    "vuelidate": "^0.7.7",
     "vuetify": "^3.4.8"
   },
   "devDependencies": {

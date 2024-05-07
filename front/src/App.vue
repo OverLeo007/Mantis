@@ -12,6 +12,7 @@ export default {
       boards: Object,
       drawer: null,
       icon: null,
+      dialog: false,
       authIcon: 'mdi-account-outline',
       headerData: {},
     }
@@ -43,7 +44,8 @@ export default {
       this.$router.push({
         name: "board",
         params: {id: boardId},
-        query: { boardTitle: boardTitle, boardId: boardId }});
+        query: {boardTitle: boardTitle, boardId: boardId}
+      });
     },
 
     goToBoards() {
@@ -58,8 +60,9 @@ export default {
       this.drawer = !this.drawer;
     },
 
-    authorise() {
-      this.$router.push({path: "/login"})
+    exit() {
+      this.dialog = !this.dialog
+      this.$router.push({path:"/login"})
     },
 
     showBar() {
@@ -68,6 +71,11 @@ export default {
         this.drawer = false
       }
       return curPath !== '/login' && curPath !== '/signin'
+    },
+
+    showView() {
+      let curPath = this.$route.path;
+      return curPath.startsWith('/board') || curPath === '/calendar'
     }
   },
 
@@ -87,13 +95,21 @@ export default {
         />
       </v-list-item>
       <v-divider></v-divider>
-      <v-list-item :height="65" title="Доски" @click="goToBoards"></v-list-item>
+      <v-list-item id="desks" class="sidebar-button" title="Доски" @click="goToBoards"></v-list-item>
+      <div v-show="showView()">
+        <v-list-item class="sidebar-btngroup-name" title="Режим просмотра"></v-list-item>
+        <v-list-item class="sidebar-button" title="Колонки" @click=""></v-list-item>
+        <v-list-item class="sidebar-button" title="Календарь" @click=""></v-list-item>
+      </div>
+
+      <v-list-item class="sidebar-btngroup-name" title="Доступные доски"></v-list-item>
+
       <v-list-item v-for="board in boards"
+                   class="sidebar-button"
                    :key="board.id"
                    :title="board.title"
-                   :height="65"
                    @click="goToBoardById(board.id, board.title)"
-                   ></v-list-item>
+      ></v-list-item>
     </v-navigation-drawer>
 
     <v-app-bar v-show="showBar()" color="#B9D7EA" class="header">
@@ -101,14 +117,18 @@ export default {
         <v-icon>{{ drawerIcon }}</v-icon>
       </v-app-bar-nav-icon>
       <v-app-bar-title>{{ $route.path === "/" ? "Доски" : "Доска: " + headerData.boardTitle }}</v-app-bar-title>
-      <v-app-bar-nav-icon style="margin-right:10px;" @click="authorise">
+      <v-app-bar-nav-icon style="margin-right:10px;" @click="this.dialog = !this.dialog">
         <v-icon>{{ authIcon }}</v-icon>
       </v-app-bar-nav-icon>
     </v-app-bar>
 
+    <div v-if="dialog" class="dialog">
+      <v-list-item class="modal-button" title="Выйти" @click="exit"></v-list-item>
+    </div>
+
     <v-main class="main">
       <router-view :key="$route.fullPath"
-                    @board-updated="updateBoardList"></router-view>
+                   @board-updated="updateBoardList"></router-view>
     </v-main>
   </v-app>
 </template>
@@ -119,11 +139,52 @@ export default {
 }
 
 .v-list-item :deep(.v-list-item-title) {
-  font-size: 20px;
+  font-size: 18px;
 }
 
-#add-card-button {
-  border-radius: 20px;
+.sidebar-button {
+  padding-left: 35px;
+  height: 28px;
+  text-align: start;
+}
+
+.sidebar-btngroup-name {
+  padding-left: 25px;
+  text-align: start;
+  margin-top: 10px;
+//height: 10px;
+}
+
+.dialog {
+  position: fixed;
+  top: 70px;
+  right: 10px;
+  width: 200px;
+  background: white;
+  //padding: 20px;
+  border-radius: 5px;
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-button {
+  width: 100%;
+  height: 30px;
+}
+
+.modal-button:deep(.v-list-item-title) {
+  font-size: 18px;
+}
+
+.sidebar-btngroup-name:deep(.v-list-item-title) {
+  font-weight: bold;
+  font-size: 18px;
+  height: 25px;
+}
+
+#desks {
+  padding-left: 25px;
+  margin-top: 10px
 }
 
 .left-sidebar {
@@ -135,4 +196,6 @@ export default {
   border: 1px solid #C0CFD3;
   height: 65px;
 }
+
+
 </style>
