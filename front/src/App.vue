@@ -15,6 +15,7 @@ export default {
       boards: Object,
       drawer: null,
       icon: null,
+      dialog: false,
       authIcon: 'mdi-account-outline',
       headerData: {},
     }
@@ -46,7 +47,8 @@ export default {
       this.$router.push({
         name: "board",
         params: {id: boardId},
-        query: { boardTitle: boardTitle, boardId: boardId }});
+        query: {boardTitle: boardTitle, boardId: boardId}
+      });
     },
 
     goToBoards() {
@@ -61,8 +63,9 @@ export default {
       this.drawer = !this.drawer;
     },
 
-    authorise() {
-      this.$router.push({path: "/login"})
+    exit() {
+      this.dialog = !this.dialog
+      this.$router.push({path:"/login"})
     },
 
     showBar() {
@@ -87,12 +90,12 @@ export default {
 
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer class="left-sidebar"  v-model="drawer">
+    <v-navigation-drawer class="left-sidebar" v-model="drawer">
       <v-list-item :height="65" title="Логотип"></v-list-item>
       <v-divider></v-divider>
       <v-list-item id="desks" class="sidebar-button" title="Доски" @click="goToBoards"></v-list-item>
       <div v-show="showView()">
-        <v-list-item class="sidebar-btngroup-name"  title="Режим просмотра"></v-list-item>
+        <v-list-item class="sidebar-btngroup-name" title="Режим просмотра"></v-list-item>
         <v-list-item class="sidebar-button" title="Колонки" @click=""></v-list-item>
         <v-list-item class="sidebar-button" title="Календарь" @click=""></v-list-item>
       </div>
@@ -104,7 +107,7 @@ export default {
                    :key="board.id"
                    :title="board.title"
                    @click="goToBoardById(board.id, board.title)"
-                   ></v-list-item>
+      ></v-list-item>
     </v-navigation-drawer>
 
     <v-app-bar v-show="showBar()" color="#B9D7EA" class="header">
@@ -112,14 +115,18 @@ export default {
         <v-icon>{{ drawerIcon }}</v-icon>
       </v-app-bar-nav-icon>
       <v-app-bar-title>{{ $route.path === "/" ? "Доски" : "Доска: " + headerData.boardTitle }}</v-app-bar-title>
-      <v-app-bar-nav-icon style="margin-right:10px;" @click="authorise">
+      <v-app-bar-nav-icon style="margin-right:10px;" @click="this.dialog = !this.dialog">
         <v-icon>{{ authIcon }}</v-icon>
       </v-app-bar-nav-icon>
     </v-app-bar>
 
+    <div v-if="dialog" class="dialog">
+      <v-list-item class="modal-button" title="Выйти" @click="exit"></v-list-item>
+    </div>
+
     <v-main class="main">
       <router-view :key="$route.fullPath"
-                    @board-updated="updateBoardList"></router-view>
+                   @board-updated="updateBoardList"></router-view>
     </v-main>
   </v-app>
 </template>
@@ -143,17 +150,34 @@ export default {
   padding-left: 25px;
   text-align: start;
   margin-top: 10px;
-  //height: 10px;
+//height: 10px;
+}
+
+.dialog {
+  position: fixed;
+  top: 70px;
+  right: 10px;
+  width: 200px;
+  background: white;
+  //padding: 20px;
+  border-radius: 5px;
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-button {
+  width: 100%;
+  height: 30px;
+}
+
+.modal-button:deep(.v-list-item-title) {
+  font-size: 18px;
 }
 
 .sidebar-btngroup-name:deep(.v-list-item-title) {
   font-weight: bold;
   font-size: 18px;
   height: 25px;
-}
-
-#add-card-button {
-  border-radius: 20px;
 }
 
 #desks {

@@ -2,20 +2,13 @@
 import {useVuelidate} from '@vuelidate/core'
 import {required, minLength, email, sameAs, maxLength} from '@vuelidate/validators'
 import * as $v from "@vuelidate/validators";
+import {reactive} from "vue";
 
 export default {
-  computed: {
-    $v() {
-      return $v
-    }
-  },
-  setup() {
-    return {
-      v$: useVuelidate()
-    }
-  },
+
   data() {
     return {
+      v$: useVuelidate(),
       login: '',
       email: '',
       password: '',
@@ -28,23 +21,18 @@ export default {
       login: {required, minLength: minLength(3), maxLengthValue: maxLength(30)},
       email: {required, email},
       password: {required, minLength: minLength(6), maxLengthValue: maxLength(30)},
-      password_repeat: {required, sameAsPassword: sameAs('password')}
+      password_repeat: {required, sameAsPassword: sameAs(this.password)}
     }
   },
 
   methods: {
     submitForm() {
-      const isFormCorrect = this.v$.$validate()
-      if (!isFormCorrect) {
+      this.v$.$validate()
+      console.log(this.v$)
+      if (this.v$.$error) {
         return
       }
       this.$router.push({path: "/login"})
-      // if (this.password !== this.password_repeat) {
-      //   alert('Пароли не совпадают!'); // затычка для дураков
-      //   return;
-      // }
-      // console.log('Отправляем данные регистрации: (шутка, мы ниче не отправляем пока)', this.login, this.email, this.password);
-      // this.$router.push({path: "/login"})
     },
 
 
@@ -68,25 +56,30 @@ export default {
       <form @submit.prevent="submitForm">
         <div class="form-group">
           <input placeholder="Логин" type="text" id="login" v-model="login">
-<!--          <p v-if="login.$error"> Ошибка </p>-->
+          <p class="err-message" v-if="v$.login.$error">! {{ v$.login.$errors[0].$message }}</p>
         </div>
         <div class="form-group">
-          <input placeholder="Почта" type="email" id="email" v-model="email">
+          <input placeholder="Почта" type="text" id="email" v-model="email">
+          <p class="err-message" v-if="v$.email.$error">! {{ v$.email.$errors[0].$message }}</p>
         </div>
         <div class="form-group">
-          <input placeholder="Пароль" type="password" id="password" v-model="password">
+          <input placeholder="Пароль" type="text" id="password" v-model="password">
+          <p class="err-message" v-if="v$.password.$error">! {{ v$.password.$errors[0].$message }}</p>
         </div>
         <div class="form-group">
-          <input placeholder="Повтор пароля" type="password" id="password_repeat" v-model="password_repeat">
+          <input placeholder="Повтор пароля" type="text" id="password_repeat" v-model="password_repeat">
+          <p class="err-message" v-if="v$.password_repeat.$error">! {{ v$.password_repeat.$errors[0].$message }}</p>
         </div>
-        <v-btn
-            class="submit-button"
-            type="submit"
-        >
-          Зарегестрироваться
-        </v-btn>
-        <div>
-          <p class="text-but" @click="logIn">Войти</p>
+        <div id="but">
+          <v-btn
+              class="submit-button"
+              type="submit"
+          >
+            Зарегестрироваться
+          </v-btn>
+          <div>
+            <p class="text-but" @click="logIn">Войти</p>
+          </div>
         </div>
       </form>
     </div>
@@ -96,7 +89,8 @@ export default {
 <style scoped>
 .login-scr {
   width: 50%;
-  height: 500px;
+  min-height: 520px;
+  max-height: 600px;
   min-width: 600px;
   position: absolute;
   top: 50%;
@@ -126,6 +120,7 @@ export default {
 .login-form {
   width: 50%;
   padding: 30px 20px 20px;
+  position: relative;
 }
 
 .text {
@@ -133,6 +128,16 @@ export default {
   color: #FFFFFF;
   font-size: 14px;
   margin-bottom: 10px;
+}
+
+#but {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  bottom: 10px;
+
+
 }
 
 .submit-button {
@@ -143,9 +148,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 40px auto 10px;
+  margin: 10px auto 10px;
   background: #AFD7F4;
-//background: linear-gradient(to right, #FFFFFF, #AFD7F4); //color: #AFD7F4;
 }
 
 .form-group {
@@ -172,11 +176,20 @@ input {
 .text-but {
   text-align: center;
   cursor: pointer;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 form {
   align-items: center;
   margin-top: 20px;
+}
+
+.err-message {
+  margin-right: 20px;
+  margin-left: 20px;
+  font-size: 10px;
+  color: red;
 }
 
 tr {

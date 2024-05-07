@@ -1,21 +1,39 @@
 <script>
+import {useVuelidate} from "@vuelidate/core";
+import {maxLength, minLength, required} from "@vuelidate/validators";
+
 export default {
   data() {
     return {
+      v$: useVuelidate(),
       login: '',
       email: '',
       password: ''
     };
   },
+  validations() {
+    return {
+      login: {required, minLength: minLength(3), maxLengthValue: maxLength(30)},
+      password: {required, minLength: minLength(6), maxLengthValue: maxLength(30)},
+    }
+  },
   methods: {
     submitForm() {
-      console.log('Отправляем данные входа: (шутка, мы ниче не отправляем пока)', this.login, this.password);
+      this.v$.$validate()
+      if (this.v$.$error) {
+        return
+      }
 
       this.$router.push({path: "/"})
     },
     signIn() {
+
       this.$router.push({path: "/signin"})
     }
+  },
+
+  mounted() {
+
   }
 };
 </script>
@@ -33,10 +51,12 @@ export default {
           <h2>ВХОД</h2>
           <form @submit.prevent="submitForm">
             <div class="form-group">
-              <input placeholder="Логин" type="text" id="login" v-model="login" required>
+              <input placeholder="Логин" type="text" id="login" v-model="login">
+              <p class="err-message" v-if="v$.login.$error">! {{ v$.login.$errors[0].$message }}</p>
             </div>
             <div class="form-group">
-              <input placeholder="Пароль" type="password" id="password" v-model="password" required>
+              <input placeholder="Пароль" type="text" id="password" v-model="password">
+              <p class="err-message" v-if="v$.password.$error">! {{ v$.password.$errors[0].$message }}</p>
             </div >
             <v-btn
                 class="submit-button"
@@ -88,6 +108,13 @@ export default {
 .login-form {
   width: 50%;
   padding: 80px 20px 20px;
+}
+
+.err-message {
+  margin-right: 20px;
+  margin-left: 20px;
+  font-size: 10px;
+  color: red;
 }
 
 .text {
