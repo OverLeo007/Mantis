@@ -3,6 +3,7 @@ package ru.paskal.MantisManager.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,7 +36,11 @@ public class AuthController {
   @PostMapping("/login")
   public LoginResponse login(@RequestBody @Validated LoginRequest request) {
     log.info("Try to login: " + request.toString());
-    return authService.login(request);
+    try {
+      return authService.login(request);
+    } catch (Exception e) {
+      throw new BadCredentialsException("Incorrect login or passowrd");
+    }
   }
 
   @PostMapping("/register")

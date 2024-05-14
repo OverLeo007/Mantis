@@ -1,4 +1,4 @@
-package ru.paskal.MantisManager.models.dto;
+package ru.paskal.MantisManager.models.dto.comments;
 
 import java.sql.Timestamp;
 import lombok.Data;
@@ -10,4 +10,5 @@ public class CommentDto {
   private UserDtoForLink user;
   private String text;
   private Timestamp commentDate;
+  private Integer parentId;
 }

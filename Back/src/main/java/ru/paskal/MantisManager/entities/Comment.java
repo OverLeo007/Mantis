@@ -41,6 +41,11 @@ public class Comment {
   @Column(name = "comment_date")
   private Timestamp commentDate;
 
+  @ManyToOne
+  @JoinColumn(name = "parent_comment_id")
+  private Comment parentComment;
+
+
   public Comment(Task task, User user, String text, Timestamp commentDate) {
     this.task = task;
     this.user = user;

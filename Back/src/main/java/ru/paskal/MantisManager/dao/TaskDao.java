@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.paskal.MantisManager.models.dto.CommentDto;
+import ru.paskal.MantisManager.models.dto.comments.CommentDto;
 import ru.paskal.MantisManager.models.dto.LabelDtoForTask;
 import ru.paskal.MantisManager.models.dto.task.TaskDtoToSend;
 import ru.paskal.MantisManager.models.dto.user.UserDtoForLink;
@@ -36,12 +36,11 @@ public class TaskDao extends Dao {
   @Transactional(readOnly = true)
   public List<Task> getByListId(Integer listId) {
     var session = getSession();
-    var tasks = session.createQuery(
+    //    log(tasks.get(0).getTaskDoer(), this);
+    return session.createQuery(
         tasksWithLabels,
         Task.class
     ).setParameter("listId", listId).getResultList();
-//    log(tasks.get(0).getTaskDoer(), this);
-    return tasks;
   }
 
   @Transactional(readOnly = true)
@@ -61,7 +60,7 @@ public class TaskDao extends Dao {
     if (comments != null) {
       taskDtoToSend.setComments(
           comments
-              .stream().map(comment -> mm.map(comment, CommentDto.class)).toList()
+              .stream().map(comment -> mm.map(comment, CommentDto.class)).toList() // TODO Сделать кастомную конвертацию
       );
     }
     mm.map(task, taskDtoToSend);

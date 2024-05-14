@@ -75,7 +75,7 @@ public class BoardListController {
       log.info("Failed editing list id=" + id + ": " + boardList.toString());
       throw new BoardListNotUpdatedException(e.getMessage());
     }
-    log.info("Success editing list id=" + id + ": " + boardList.toString());
+    log.info("Success editing list id=" + id + ": " + boardList);
   }
 
   @PostMapping

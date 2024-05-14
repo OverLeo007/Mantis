@@ -8,3 +8,4 @@ public class BoardNotUpdatedException extends ModelNotUpdatedException {
     super(entityType, msg);
   }
 }
+

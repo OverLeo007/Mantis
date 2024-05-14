@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import ru.paskal.MantisManager.entities.Task;
 
 @Repository
-
 public interface TaskRepository extends JpaRepository<Task, Integer> {
   List<Task> findByListId(Integer listId);
 

@@ -3,7 +3,7 @@ package ru.paskal.MantisManager.models.dto.task;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
-import ru.paskal.MantisManager.models.dto.CommentDto;
+import ru.paskal.MantisManager.models.dto.comments.CommentDto;
 import ru.paskal.MantisManager.models.dto.LabelDtoForTask;
 import ru.paskal.MantisManager.models.dto.user.UserDtoForLink;
 

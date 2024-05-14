@@ -1,6 +1,7 @@
 package ru.paskal.MantisManager.security.user;
 
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,7 @@ import ru.paskal.MantisManager.entities.User;
 import ru.paskal.MantisManager.exceptions.AccessForbiddenException;
 import ru.paskal.MantisManager.exceptions.notFound.UserNotFoundException;
 import ru.paskal.MantisManager.services.BoardListService;
+import ru.paskal.MantisManager.services.CommentService;
 import ru.paskal.MantisManager.services.TaskService;
 import ru.paskal.MantisManager.services.UserService;
 
@@ -20,6 +22,7 @@ public class UserPrincipalService {
   private final UserService userService;
   private final BoardListService boardListService;
   private final TaskService taskService;
+  private final CommentService commentService;
 
   public User getUserFromPrincipal(UserPrincipal principal) throws UserNotFoundException {
     if (principal == null) {
@@ -55,6 +58,19 @@ public class UserPrincipalService {
     var task = taskService.getById(taskId);
     getAccessToBoardList(principal, task.getList().getId());
     return task;
+  }
+
+  @Transactional(readOnly = true)
+  public void hasAccessToComment(UserPrincipal principal, Integer commentId)
+    throws AccessForbiddenException {
+    var editor = getUserFromPrincipal(principal);
+    var authorId = commentService.getById(commentId).getUser().getId();
+    var editorId = principal.getId();
+    if (!(Objects.equals(authorId, editorId) || editor.getSimpleRole().equals("ROLE_ADMIN"))) {
+      throw new AccessForbiddenException(
+          editor.getUsername() + " has not access for comment with id = " + commentId
+      );
+    }
   }
 
 }

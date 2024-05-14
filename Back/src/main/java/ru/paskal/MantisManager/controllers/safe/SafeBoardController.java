@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.paskal.MantisManager.entities.User;
@@ -35,6 +37,7 @@ import ru.paskal.MantisManager.utils.EntityMapper;
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/s/boards")
 @RequiredArgsConstructor
+@Profile("with-security")
 @Slf4j
 public class SafeBoardController {
 
@@ -49,6 +52,7 @@ public class SafeBoardController {
   public List<BoardDtoForLink> getBoards(
       @AuthenticationPrincipal UserPrincipal principal
   ) {
+
     try {
       User user = userPrincipalService.getUserFromPrincipal(principal);
       if (user.getSimpleRole().equals("ROLE_USER")) {
@@ -62,6 +66,7 @@ public class SafeBoardController {
     }
     throw new InputMismatchException("Something with roles has broken: " + principal);
   }
+
 
   @PostMapping
   @ResponseStatus(HttpStatus.OK)
@@ -115,9 +120,4 @@ public class SafeBoardController {
     }
     log.info("Success deleting board id=" + id);
   }
-
-
-
-
-
 }

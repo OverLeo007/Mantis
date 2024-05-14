@@ -3,6 +3,7 @@ package ru.paskal.MantisManager.controllers.safe;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -33,6 +34,7 @@ import ru.paskal.MantisManager.utils.EntityMapper;
 @CrossOrigin(origins = {"*"})
 @RequestMapping("/api/s/tasks")
 @RequiredArgsConstructor
+@Profile("with-security")
 @Slf4j
 public class SafeTaskController {
 

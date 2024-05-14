@@ -114,6 +114,10 @@ COMMENT ON COLUMN comments.user_id IS 'Ссылка на пользовател�
 COMMENT ON COLUMN comments.comment_text IS 'Текст комментария';
 COMMENT ON COLUMN comments.comment_date IS 'Дата и время комментария';
 
+ALTER TABLE comments
+    ADD COLUMN parent_comment_id INTEGER REFERENCES comments(comment_id) ON DELETE SET NULL;
+comment on column comments.parent_comment_id is 'Id родительского комментария, если этот комментарий является ответом';
+
 
 -- Создаем таблицу ролей
 CREATE TABLE roles
