@@ -70,11 +70,11 @@ export default {
           <p class="err-message" v-if="v$.email.$error">! {{ v$.email.$errors[0].$message }}</p>
         </div>
         <div class="form-group">
-          <input placeholder="Пароль" type="text" id="password" v-model="password">
+          <input placeholder="Пароль" type="password" id="password" v-model="password">
           <p class="err-message" v-if="v$.password.$error">! {{ v$.password.$errors[0].$message }}</p>
         </div>
         <div class="form-group">
-          <input placeholder="Повтор пароля" type="text" id="password_repeat" v-model="password_repeat">
+          <input placeholder="Повтор пароля" type="password" id="password_repeat" v-model="password_repeat">
           <p class="err-message" v-if="v$.password_repeat.$error">! {{ v$.password_repeat.$errors[0].$message }}</p>
         </div>
         <div id="but">
