@@ -1,15 +1,15 @@
 <script>
 import EditableCardTitle from "@/components/EditableCardTitle.vue";
 import axios from "axios";
-import { DateTime, Duration } from "luxon";
+import {DateTime, Duration} from "luxon";
 import TimeConverter from "../utils/TimeConverter.js";
 import TasksApi from "@/api/tasks/TasksApi.js";
+import CommentsApi from "@/api/comments/CommentsApi.js";
 
 // const baseURL = 'http://26.171.167.108:8080/api/tasks'
 // const api = axios.create({
 //   baseURL: baseURL
 // })
-
 
 
 export default {
@@ -42,9 +42,23 @@ export default {
       color: null,
       cardText: "Добавить описание",
       mavonText: this.data.taskText,
+      comments: [],
+      commentInput: ""
     }
   },
   methods: {
+    async sendComment() {
+      try {
+        if (this.commentInput.trim() !== "") {
+          await CommentsApi.createComment(this.card.id, this.commentInput);
+          this.commentInput = "";
+          const response = await CommentsApi.getComments(this.card.id);
+          this.comments = response.data;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async editCard() {
       try {
         this.isStartDate ? this.card.taskPreferences['startDate'] = this.startDate : this.card.taskPreferences['startDate'] = null
@@ -80,7 +94,15 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    timestampToString(timestamp) {
+      const date = new Date(timestamp);
+      const day = ("0" + date.getDate()).slice(-2); // Добавляем ведущий ноль, если день меньше 10
+      const month = ("0" + (date.getMonth() + 1)).slice(-2); // Месяцы начинаются с 0 в JavaScript
+      const year = date.getFullYear().toString().slice(-2); // Берем последние две цифры года
+      return `${day}.${month}.${year}`;
     }
+
   },
   watch: {
     'card.taskPreferences'(newValue) {
@@ -91,8 +113,13 @@ export default {
       this.isEndDate = Boolean(newValue.endDate)
     }
   },
-  mounted() {
-
+  async mounted() {
+    try {
+      const response = await CommentsApi.getComments(this.card.id);
+      this.comments = response.data;
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 </script>
@@ -102,7 +129,8 @@ export default {
     <v-sheet class="card-sheet" :color="card.taskPreferences.color" width="100%" height="50">
       <v-icon @click.stop="$emit('deleteCard', card.id)" class="card-sheet-icon" icon="mdi-trash-can"></v-icon>
     </v-sheet>
-    <EditableCardTitle :data="card" :field-to-edit="'taskTitle'" :function-stop-editing="editCard" :hide-delete-button="true"></EditableCardTitle>
+    <EditableCardTitle :data="card" :field-to-edit="'taskTitle'" :function-stop-editing="editCard"
+                       :hide-delete-button="true"></EditableCardTitle>
     <div class="card-time">
       <span v-if="this.card.taskPreferences['startDate'] && this.card.taskPreferences['endDate']">
         {{ TimeConverter.twoDeadlines(this.card.taskPreferences['startDate'], this.card.taskPreferences['endDate']) }}
@@ -130,13 +158,13 @@ export default {
       width="auto"
       class="dialog"
   >
-    <v-card class="dialog-card-edit" >
+    <v-card class="dialog-card-edit">
       <v-card-title class="card-title">
         {{ card.taskTitle }}
       </v-card-title>
 
       <div class="dialog-card-content">
-        <div class="main-content">
+      <div class="main-content">
           <mavon-editor
               class="card-text-area"
               v-model="mavonText"
@@ -173,30 +201,106 @@ export default {
               />
             </div>
           </div>
+          <div class="comments-section">
+            <h3>Комментарии</h3>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="text" class="input-comment" v-model="commentInput" placeholder="Введите текст"/>
+              <v-card-actions class="card-actions">
+                <v-btn
+                    class="modal-close-button"
+                    color="primary"
+                    @click="sendComment()"
+                >
+                  Отправить
+                </v-btn>
+              </v-card-actions>
+            </div>
+            <div class="comments">
+              <div v-for="(comment) in comments">
+                <p id="comment-user">{{ comment.user.username }}</p>
+                <div class="comment">
+                  <p>{{ comment.text }}</p>
+                  <p id="comment-date">{{ timestampToString(comment.commentDate) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
-        <div class="second-content">
-          <v-color-picker
-              class="ma-2"
-              :swatches="swatches"
-              v-model="card.taskPreferences.color"
-              show-swatches
-          ></v-color-picker>
-          <v-card-actions class="card-actions">
-            <v-btn
-                class="modal-close-button"
-                color="primary"
-                @click="dialog = false; editCard()"
-            >
-              Готово
-            </v-btn>
-          </v-card-actions>
-        </div>
+
+      <div class="second-content">
+        <v-color-picker
+            class="ma-2"
+            :swatches="swatches"
+            v-model="card.taskPreferences.color"
+            show-swatches
+        ></v-color-picker>
+        <v-card-actions class="card-actions">
+          <v-btn
+              class="modal-close-button"
+              color="primary"
+              @click="dialog = false; editCard()"
+          >
+            Готово
+          </v-btn>
+        </v-card-actions>
+      </div>
       </div>
     </v-card>
   </v-dialog>
 </template>
 
 <style scoped>
+#comment-date {
+  text-align: right;
+}
+
+#comment-user {
+  margin-left: 10px;
+}
+
+.comments {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.comment {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.1);
+  margin: 5px 10px 10px 0px;
+  padding: 10px;
+}
+
+.submit-button {
+  border-radius: 30px;
+  padding: 25px 20px 25px;
+  width: 100px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #AFD7F4;
+}
+
+.comments-section {
+  margin-right: 20px;
+  margin-left: 25px;
+}
+
+.input-comment {
+  padding: 10px;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  align-items: flex-start;
+}
+
 .dialog-card-content {
   display: flex;
   justify-content: space-between;
@@ -242,7 +346,7 @@ export default {
 .card-text-area {
   margin-left: 24px;
   margin-right: 20px;
-  height: 400px;
+  height: 100px;
 }
 
 .modal-close-button {

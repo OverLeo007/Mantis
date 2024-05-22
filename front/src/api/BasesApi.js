@@ -6,7 +6,8 @@ const baseAddress = 'http://26.171.167.108:8080';
 const boardsAddress = `${baseAddress}/api/s/boards`;
 const tasksAddress = `${baseAddress}/api/s/tasks`;
 const listsAddress = `${baseAddress}/api/s/lists`;
-const authAddress = `${baseAddress}/api/auth`
+const authAddress = `${baseAddress}/api/auth`;
+const commentsAddress = `${baseAddress}/api/s/comments`
 
 const boardsApi = axios.create({
     baseURL: boardsAddress
@@ -20,9 +21,12 @@ const listsApi = axios.create({
 const authApi = axios.create({
     baseURL: authAddress
 })
+const commentsApi = axios.create({
+    baseURL: commentsAddress
+})
 
 function addToken() {
-    [boardsApi, tasksApi, listsApi, authApi].forEach(api => {
+    [boardsApi, tasksApi, listsApi, authApi, commentsApi].forEach(api => {
         api.interceptors.request.use(config => {
             if (localStorage.getItem("auth_token")) {
                 config.headers.Authorization = `Bearer ${localStorage.getItem("auth_token")}`;
@@ -40,5 +44,6 @@ export default {
     tasksApi,
     listsApi,
     authApi,
+    commentsApi,
     addToken
 }
