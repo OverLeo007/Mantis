@@ -11,6 +11,8 @@ export default class {
     }
 
     static async login(username, password) {
+        localStorage.removeItem('auth_token');
+
         return await BasesApi.authApi.post("login", {
             username,
             password

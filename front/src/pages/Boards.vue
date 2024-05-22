@@ -85,7 +85,7 @@ export default {
   padding: 35px;
   height: 100%;
   overflow-x: auto;
-  scrollbar-width: none;
+  //scrollbar-width: none;
 }
 
 .add-board-button {

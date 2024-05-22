@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const baseAddress = 'http://26.171.167.108:8080';
-//console.log(process.env.VUE_APP_API_URL);
+const baseAddress = import.meta.env.VITE_API_URL;
 
 const boardsAddress = `${baseAddress}/api/s/boards`;
 const tasksAddress = `${baseAddress}/api/s/tasks`;
