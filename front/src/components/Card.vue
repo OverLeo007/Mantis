@@ -2,7 +2,6 @@
 import EditableCardTitle from "@/components/EditableCardTitle.vue";
 import axios from "axios";
 import {DateTime, Duration} from "luxon";
-import { DateTime, Duration } from "luxon";
 import TimeConverter from "../utils/TimeConverter.js";
 import TasksApi from "@/api/tasks/TasksApi.js";
 import CommentsApi from "@/api/comments/CommentsApi.js";
