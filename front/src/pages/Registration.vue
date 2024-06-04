@@ -53,7 +53,7 @@ export default {
 <template>
   <div class="login-scr">
     <div class="logo-card">
-      <p id="logo">ЛОГОТИП</p>
+      <img id="logo" src="@/assets/white-mantis-logo.png" alt="Logo">
       <p class="text"> Мы рады приветствовать вас в нашем инструменте управления задачами!</p>
       <p class="text">Здесь вы сможете эффективно организовывать свою работу, отслеживать процесс выполнения
         задач и сотрудничать с коллегами! Управляйте проектами грамотно с Mantis!</p>
@@ -109,6 +109,11 @@ export default {
   overflow: hidden;
   border-spacing: 0;
   display: flex;
+}
+
+#logo {
+  width: 150px;
+  height: 100px;
 }
 
 .logo-card {

@@ -46,7 +46,7 @@ export default {
 <template>
   <div class="login-scr">
       <div class="logo-card">
-        <p id="logo">ЛОГОТИП</p>
+        <img id="logo" src="@/assets/white-mantis-logo.png" alt="Logo">
         <p class="text"> Мы рады приветствовать вас в нашем инструменте управления задачами!</p>
         <p class="text">Здесь вы сможете эффективно организовывать свою работу, отслеживать процесс выполнения
           задач и сотрудничать с коллегами! Управляйте проектами грамотно с Mantis!</p>
@@ -60,7 +60,7 @@ export default {
               <p class="err-message" v-if="v$.login.$error">! {{ v$.login.$errors[0].$message }}</p>
             </div>
             <div class="form-group">
-              <input placeholder="Пароль" type="text" id="password" v-model="password">
+              <input placeholder="Пароль" type="password" id="password" v-model="password">
               <p class="err-message" v-if="v$.password.$error">! {{ v$.password.$errors[0].$message }}</p>
             </div >
             <v-btn
@@ -81,6 +81,13 @@ export default {
 </template>
 
 <style scoped>
+
+#logo {
+  width: 150px;
+  height: 100px;
+}
+
+
 .login-scr {
   width: 50%;
   height: 500px;

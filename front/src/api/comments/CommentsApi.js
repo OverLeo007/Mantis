@@ -8,13 +8,11 @@ export default class {
             text
         });
     }
-
     static async getComments(taskId) {
         return await BasesApi.commentsApi.get("", {
             params: {task_id: taskId}
         });
     }
-
     static async deleteComment(id) {
         return await BasesApi.commentsApi.delete(`/${id}`);
     }
